@@ -1,0 +1,18 @@
+﻿<Window x:Class="NeuralaceMagnetic.EStopVerify"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="EStop Verify" Height="690.885" Width="905.386" MaxHeight="690.885" MaxWidth="905.386" Background="#FF10D5A6" WindowStartupLocation="CenterOwner" Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="200*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Label Foreground="White" Content="Press the Reset button on the handheld EStop to continue." HorizontalContentAlignment="Center" Height="70" VerticalAlignment="Top" FontSize="22"></Label>
+
+        </Grid>
+        <Grid Grid.Row="1" Background="LightGray">
+            <Button x:Name="CancelButton" Margin="263,245,0,0" Height="100" VerticalAlignment="Top" HorizontalAlignment="Left" Width="370" Background="White" Content="Cancel" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="CancelButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>

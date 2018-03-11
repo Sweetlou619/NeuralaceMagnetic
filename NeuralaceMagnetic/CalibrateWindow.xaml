@@ -1,0 +1,136 @@
+﻿<Window x:Class="NeuralaceMagnetic.CalibrateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeuralaceMagnetic"
+        mc:Ignorable="d"
+        Title="Calibration Window"
+        Height="800" Width="905.386" MaxHeight="800" MaxWidth="905.386" Background="#FF10D5A6" Closing="Window_Closing" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="200*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Label Name="LabelHeader" Foreground="White" Content="Therapy calibration - Pass 1 (10mm)" HorizontalContentAlignment="Center" Height="65" VerticalAlignment="Top" FontSize="22"></Label>
+            <Label Name="LabelInstructions" Foreground="White" Content="Select the area with the best pain relief and click complete" HorizontalContentAlignment="Center" Height="38" FontSize="18" VerticalAlignment="Top" Margin="0,37,0,0"></Label>
+        </Grid>
+        <Grid Grid.Row="1" Background="LightGray">
+            <Grid Name="ZPadGrid" Visibility="Collapsed" Margin="121,45,66,35">
+                <Button x:Name="jogup" Margin="312,105,0,0" Height="135" Width="235" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="80" FontFamily="Marlett" Content="5" Click="jogup_Click"/>
+                <Button x:Name="Jogdown" Margin="312,245,0,0" Height="135" Width="235" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="80" FontFamily="Marlett" Content="6" Click="Jogdown_Click"/>
+                <Button x:Name="SectionZOne" Margin="161,355,0,0" Height="70" Width="70" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="1" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionZOne_Click" />
+                <Button x:Name="SectionZTwo" Margin="161,280,0,0" Height="70" Width="70" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="2" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionZTwo_Click" />
+                <Button x:Name="SectionZThree" Margin="161,205,0,0" Height="70" Width="70" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="3" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionZThree_Click"/>
+                <Button x:Name="SectionZFour" Margin="161,130,0,0" Height="70" Width="70" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="4" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionZFour_Click"/>
+                <Button x:Name="SectionZFive" Margin="161,55,0,0" Height="70" Width="70" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="5" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionZFive_Click"/>
+            </Grid>
+            <Grid Name="NumPadGrid" Visibility="Visible" Margin="236,64,-23,16">
+                <Button x:Name="SectionOne" Margin="-199,8,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="6" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionOne_Click" />
+                <Button x:Name="SectionTwo" Margin="-64,8,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="2" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionTwo_Click" />
+                <Button x:Name="SectionThree" Margin="71,8,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="7" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionThree_Click" />
+                <Button x:Name="SectionFour" Margin="-199,143,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="4" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionFour_Click" />
+                <Button x:Name="SectionFive" Margin="-64,143,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="1" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionFive_Click" />
+                <Button x:Name="SectionSix" Margin="71,143,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="5" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionSix_Click" />
+                <Button x:Name="SectionSeven" Margin="-199,279,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="8" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionSeven_Click"/>
+                <Button x:Name="SectionEight" Margin="-64,279,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="3" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionEight_Click"/>
+                <Button x:Name="SectionNine" Margin="71,279,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="9" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionNine_Click"  />
+                <Grid>
+                    <GroupBox Margin="217,-13,38,187" Header="Response">
+                        <Grid>
+                            <Button Name="SectionOneResponse" Margin="5,3,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="6" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionOneResponse_Click"  />
+                            <Button Name="SectionTwoResponse" Margin="140,3,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="2" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionTwoResponse_Click" />
+                            <Button Name="SectionThreeResponse" Margin="275,3,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="7" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionThreeResponse_Click"  />
+                            <Button Name="SectionFourResponse" Margin="5,138,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="4" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionFourResponse_Click" />
+                            <Button Name="SectionFiveResponse" Margin="140,138,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="1" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionFiveResponse_Click" />
+                            <Button Name="SectionSixResponse" Margin="275,138,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="5" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionSixResponse_Click"  />
+                            <Button Name="SectionSevenResponse" Margin="5,274,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="8" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionSevenResponse_Click" />
+                            <Button Name="SectionEightResponse" Margin="140,274,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="3" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionEightResponse_Click" />
+                            <Button Name="SectionNineResponse" Margin="275,274,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="9" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Click="SectionNineResponse_Click" />
+
+                            <!--<Grid x:Name="SectionOnePain" Margin="7,5,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionOne" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelOne" Foreground="#FF10D5A6"  FontWeight="Bold" FontSize="40" Margin="49,10,42,63">6</Label>
+                                <TextBox Name="ResponseOne" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseOneDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseOneDec_Click" />
+                                <Button Name="ResponseOneInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseOneInc_Click" />
+                            </Grid>
+                            <Grid x:Name="SectionTwoPain" Margin="142,5,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionTwo" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelTwo" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">2</Label>
+                                <TextBox Name="ResponseTwo" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseTwoDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseTwoDec_Click"/>
+                                <Button Name="ResponseTwoInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseTwoInc_Click"/>
+                            </Grid>
+                            <Grid x:Name="SectionThreePain" Margin="277,5,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionThree" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelThree" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">7</Label>
+                                <TextBox Name="ResponseThree" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseThreeDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseThreeDec_Click"/>
+                                <Button Name="ResponseThreeInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseThreeInc_Click"/>
+                            </Grid>
+                            <Grid x:Name="SectionFourPain" Margin="7,140,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionFour" Fill="#FF10D5A6" Opacity="0"></Rectangle>
+                                <Label Name="ResponseLabelFour" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">4</Label>
+                                <TextBox Name="ResponseFour" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseFourDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseFourDec_Click"/>
+                                <Button Name="ResponseFourInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseFourInc_Click"/>
+                            </Grid>
+                            <Grid x:Name="SectionFivePain" Margin="142,140,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionFive" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelFive" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">1</Label>
+                                <TextBox Name="ResponseFive" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseFiveDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseFiveDec_Click"/>
+                                <Button Name="ResponseFiveInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseFiveInc_Click"/>
+                            </Grid>
+                            <Grid x:Name="SectionSixPain" Margin="277,140,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionSix" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelSix" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">5</Label>
+                                <TextBox Name="ResponseSix" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseSixDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseSixDec_Click"/>
+                                <Button Name="ResponseSixInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseSixInc_Click"/>
+                            </Grid>
+                            <Grid x:Name="SectionSevenPain" Margin="7,276,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionSeven" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelSeven" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">8</Label>
+                                <TextBox Name="ResponseSeven" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseSevenDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseSevenDec_Click"/>
+                                <Button Name="ResponseSevenInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseSevenInc_Click"/>
+                            </Grid>
+                            <Grid x:Name="SectionEightPain" Margin="142,276,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionEight" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelEight" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">3</Label>
+                                <TextBox Name="ResponseEight" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseEightDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseEightDec_Click"/>
+                                <Button Name="ResponseEightInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseEightInc_Click"/>
+                            </Grid>
+                            <Grid x:Name="SectionNinePain" Margin="277,276,0,0" Height="130" Width="130" VerticalAlignment="Top" HorizontalAlignment="Left" Background="WhiteSmoke">
+                                <Rectangle Name="RectSectionNine" Fill="#FF10D5A6" Opacity=".3"></Rectangle>
+                                <Label Name="ResponseLabelNine" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="40" Margin="49,10,42,63">9</Label>
+                                <TextBox Name="ResponseNine" Margin="43,79,42,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="25" TextChanged="TextBox_TextChanged">5</TextBox>
+                                <Button Name="ResponseNineDec" Margin="6,80,91,14" Content="-" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseNineDec_Click"/>
+                                <Button Name="ResponseNineInc" Margin="92,80,5,14" Content="+" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Background="White" FontSize="20" Click="ResponseNineInc_Click"/>
+                            </Grid>-->
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </Grid>
+            <Button x:Name="RunThrough" Margin="120,5,0,0" Height="60" Width="230" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="run through all" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="RunThrough_Click"  />
+            <Button x:Name="RunThrough_Next" Margin="91,612,0,0" Height="60" Width="230" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="complete pass 1" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="RunThrough_Next_Click"  />
+            <Button x:Name="RunThrough_Next2" Margin="326,612,0,0" Height="60" Width="230" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="complete pass 2" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" IsEnabled="False" Click="RunThrough_Next2_Click"  />
+            <Button x:Name="RunThrough_Complete" IsEnabled="False" Margin="561,612,0,0" Height="60" Width="230" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="complete pass 3" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="RunThrough_Complete_Click"/>
+            <CheckBox x:Name="checkBoxTriggerTherapy" IsChecked="True" Content="trigger therapy" HorizontalAlignment="Left" Margin="571,506,0,0" VerticalAlignment="Top" Height="17" Width="105" Checked="checkBoxTriggerTherapy_Checked" Unchecked="checkBoxTriggerTherapy_Unchecked">
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                </CheckBox.LayoutTransform>
+            </CheckBox>
+            <Button x:Name="resetTherapy" Margin="326,547,0,0" Height="60" Width="230" VerticalAlignment="Top" HorizontalAlignment="Left" Background="White" Content="reset calibration" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="resetTherapy_Click" />
+            <CheckBox x:Name="checkBoxTrackZ" IsChecked="False" Content="track tof" HorizontalAlignment="Left" Margin="571,561,0,0" VerticalAlignment="Top" Height="17" Width="105" Checked="checkBoxTrackZ_Checked" Unchecked="checkBoxTrackZ_Unchecked">
+                <CheckBox.LayoutTransform>
+                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                </CheckBox.LayoutTransform>
+            </CheckBox>
+        </Grid>
+    </Grid>
+</Window>

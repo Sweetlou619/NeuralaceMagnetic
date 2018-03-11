@@ -1,0 +1,31 @@
+﻿<Window x:Class="NeuralaceMagnetic.TrackWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeuralaceMagnetic"
+        mc:Ignorable="d"
+        Title="Tracking in progress" Height="750" Width="905.386" MaxHeight="750" MaxWidth="905.386" WindowStartupLocation="CenterOwner" Closing="Window_Closing" Loaded="Window_Loaded">
+    <Grid Background="#FF10D5A6" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="200*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Label Foreground="White" Content="Tracking in progress" HorizontalContentAlignment="Center" Height="60" VerticalAlignment="Top" FontSize="22"></Label>
+
+        </Grid>
+        <Grid Grid.Row="1" Background="LightGray">
+            <Grid Margin="276,10,271,230" Background="WhiteSmoke" Height="350" Width="350">
+                <Rectangle Fill="Transparent" HorizontalAlignment="Left" Height="350" Stroke="#FF10D5A6" Opacity=".8" StrokeThickness="5" VerticalAlignment="Top" Width="1" Margin="175,0,0,0"/>
+                <Rectangle Fill="Transparent" HorizontalAlignment="Left" Height="1" Stroke="#FF10D5A6" Opacity=".8" StrokeThickness="5" VerticalAlignment="Top" Width="350" Margin="0,175,0,0"/>
+                <Ellipse Name="TargetFollower" Fill="Transparent" Height="40" Stroke="#FF10D5A6" VerticalAlignment="Top" HorizontalAlignment="Left" StrokeThickness="5" Width="40" Margin="155,155,0,0"/>
+                <Ellipse Fill="#FF10D5A6" Height="20" Stroke="#FF10D5A6" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Margin="165,165,0,0"/>
+
+            </Grid>
+            <Button x:Name="DoneButton" Margin="158,0,162,10" Height="92" VerticalAlignment="Bottom" Background="White" Content="Complete" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="DoneButton_Click"/>
+            <Label x:Name="errorLabel" Foreground="Tomato" Content="" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="70" Margin="10,0,10,107" VerticalAlignment="Bottom" FontSize="22" Width="877"/>
+            <Label x:Name="statusLabel" Foreground="White" Content="" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="70" Margin="10,0,10,177" VerticalAlignment="Bottom" FontSize="22" Width="877"/>
+        </Grid>
+    </Grid>
+</Window>

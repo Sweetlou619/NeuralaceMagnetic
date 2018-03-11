@@ -1,0 +1,138 @@
+﻿<Window x:Class="NeuralaceMagnetic.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeuralaceMagnetic"
+        mc:Ignorable="d"
+        Title="Axon Robotic Therapy" Height="1500" Width="1500" WindowStartupLocation="CenterScreen"
+        WindowState="Maximized" Loaded="Window_Loaded">
+
+    <Grid Background="WhiteSmoke">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="445*"/>
+        </Grid.RowDefinitions>
+        <Grid Name="HeaderGrid">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#10D5A6" Offset="0"/>
+                    <GradientStop Color="#10D5A6" Offset="1"/>
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Label Content="Axon Robotic Therapy" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="10,4,0,0" FontSize="35" Foreground="White" FontFamily="Segoe UI Semibold"/>
+        </Grid>
+
+        <!--<Image x:Name="image" HorizontalAlignment="Left" Height="1093" Margin="-212,-150,-231,-286" VerticalAlignment="Top" Width="1429" Source="/NeuralaceMagnetic;component/NeuraLaceMedicalTransp.png" Grid.RowSpan="2"/>-->
+        <Image x:Name="image" Opacity="0.6" Margin="67,60,62,-166" Source="/NeuralaceMagnetic;component/NeuraLaceMedicalTransp.png" Grid.Row="1"/>
+
+        <GroupBox Header="Universal Robot" FontSize="18" Margin="0,46,10,0" Grid.Row="1" HorizontalAlignment="Right" Width="444" Height="321" VerticalAlignment="Top" >
+            <Grid>
+                <Rectangle Fill="White" Opacity="0.6"></Rectangle>
+                <Ellipse x:Name="URConnected" Height="40" Width="40" Fill="Gray" Margin="10,10,382,0" VerticalAlignment="Top"></Ellipse>
+                <Label Width="150" FontSize="20" Content="Connected" Margin="55,11,227,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="URReady" Height="40" Width="40" Fill="Gray" Margin="10,56,382,0" VerticalAlignment="Top"/>
+                <Label Width="150" FontSize="20" Content="Ready" Margin="55,57,227,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="URDistanceInRange" Height="40" Width="40" Fill="Gray" Margin="10,102,382,0" VerticalAlignment="Top"/>
+                <Label FontSize="20" Content="Distance In Range" Margin="55,103,201,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="URHomed" Height="40" Width="40" Fill="Gray" Margin="10,148,382,0" VerticalAlignment="Top"/>
+                <Label Width="150" FontSize="20" Content="Homed" Margin="55,149,227,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse Height="40" x:Name="URFault"  Width="40" Fill="Gray" Margin="10,194,382,0" VerticalAlignment="Top"/>
+                <Label Width="150" FontSize="20" Content="Fault" Margin="55,195,227,0" Height="41" VerticalAlignment="Top"/>
+                <TextBox Name="URErrorMessageBox" IsReadOnly="True" FontSize="20" VerticalContentAlignment="Center" Text="-" Margin="141,195,24,0" Height="41" VerticalAlignment="Top"/>
+                <TextBox x:Name="URDistanceValue" IsReadOnly="True" FontSize="20" VerticalContentAlignment="Center" Text="-" Margin="231,101,24,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="URFreedrive" Height="40" Width="40" Fill="Gray" Margin="10,240,382,0" VerticalAlignment="Top"/>
+                <Label Width="150" FontSize="20" Content="Freedrive" Margin="55,241,227,0" Height="41" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Polaris Camera" FontSize="18" Margin="0,526,9,0" Grid.Row="1" HorizontalAlignment="Right" Width="444" Height="231" VerticalAlignment="Top" >
+            <Grid>
+                <Rectangle Fill="White" Opacity="0.6"></Rectangle>
+                <Ellipse x:Name="PolarisConnected" Height="40" Width="40" Fill="Gray" Margin="10,10,382,0" VerticalAlignment="Top"></Ellipse>
+                <Label Width="150" FontSize="20" Content="Connected" Margin="55,11,227,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="RobotMarkerVisible" Height="40" Width="40" Fill="Gray" Margin="10,56,382,0" VerticalAlignment="Top"/>
+                <Label FontSize="20" Content="Robot Marker Visible" Margin="55,57,117,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="Patientent1MarkerVisible" Height="40" Width="40" Fill="Gray" Margin="10,102,382,0" VerticalAlignment="Top"/>
+                <Label FontSize="20" Content="Patient Marker 1 Visible" Margin="55,103,117,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="PatientMarker2Visible" Height="40" Width="40" Fill="Gray" Margin="10,148,382,0" VerticalAlignment="Top"/>
+                <Label FontSize="20" Content="Patient Marker 2 Visible" Margin="55,149,87,0" Height="41" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Polaris Camera Information" Margin="0,10,500,0" Grid.Row="1" HorizontalAlignment="Right" Width="207" Height="442" VerticalAlignment="Top" Visibility="Collapsed">
+            <Grid>
+                <Label Content="Status: " Height="28" Margin="4,17,0,0" RenderTransformOrigin="0.481,8.672" HorizontalAlignment="Left" Width="48" VerticalAlignment="Top"/>
+                <Label Name="PolarisLabelStatus" Content="Connecting..." Height="28" Margin="52,17,0,0" RenderTransformOrigin="0.481,8.672" Foreground="Tomato" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+                <ComboBox Name="ComboBoxPolarisSelection" Height="28" Width="125" Margin="52,51,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" SelectedIndex="0">
+                    <ComboBox.Items>
+                        <ComboBoxItem>Camera</ComboBoxItem>
+                        <ComboBoxItem>User 1</ComboBoxItem>
+                        <ComboBoxItem>User 2</ComboBoxItem>
+                    </ComboBox.Items>
+                </ComboBox>
+                <Label Content="X: " Height="28" Width="28" Margin="24,84,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
+                <Label Content="Y: " Height="28" Width="28" Margin="24,117,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="Z: " Height="28" Width="28" Margin="24,150,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="qX: " Height="28" Width="28" Margin="21,183,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="qY: " Height="28" Width="28" Margin="21,216,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="qZ: " Height="28" Width="28" Margin="21,249,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="qO: " Height="28" Width="28" Margin="21,282,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,84,0,0" Name="PolarisX" IsReadOnly="True" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <TextBox Height="28" Width="125" Margin="52,117,0,0" Name="PolarisY" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,150,0,0" Name="PolarisZ" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Margin="52,183,0,0" Name="PolarisQX" IsReadOnly="True" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,216,0,0" Name="PolarisQY" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,249,0,0" Name="PolarisQZ" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,282,0,0" Name="PolarisQO" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Universal Robot Information" Margin="0,10,10,0" Grid.Row="1" HorizontalAlignment="Right" Width="232" Height="442" VerticalAlignment="Top" Visibility="Collapsed">
+            <Grid>
+                <Label Content="X: " Height="28" Width="28" Margin="24,84,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
+                <Label Content="Y: " Height="28" Width="28" Margin="24,117,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="Z: " Height="28" Width="28" Margin="24,150,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="qX: " Height="28" Width="28" Margin="21,183,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="qY: " Height="28" Width="28" Margin="21,216,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Label Content="qZ: " Height="28" Width="28" Margin="21,249,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,84,0,0" Name="TextBoxX" IsReadOnly="True" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <TextBox Height="28" Width="125" Margin="52,117,0,0" Name="TextBoxY" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,150,0,0" Name="TextBoxZ" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Margin="52,183,0,0" Name="TextBoxQX" IsReadOnly="True" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,216,0,0" Name="TextBoxQY" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,249,0,0" Name="TextBoxQZ" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,282,0,0" Name="AnalogRead" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
+                <Label Content="Status: " Height="28" Margin="4,17,0,0" RenderTransformOrigin="0.481,8.672" HorizontalAlignment="Left" Width="48" VerticalAlignment="Top"/>
+                <Label Name="LabelStatus" Content="Connecting..." Height="28" Margin="52,17,0,0" RenderTransformOrigin="0.481,8.672" Foreground="Tomato" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+                <Label Content="Mode: " Height="28" Margin="4,45,0,0" RenderTransformOrigin="0.481,8.672" HorizontalAlignment="Left" Width="48" VerticalAlignment="Top"/>
+                <Label Name="RobotStatusLabel" Content="..." Height="28" Margin="52,45,0,0" RenderTransformOrigin="0.481,8.672" Foreground="#10D5A6" HorizontalAlignment="Left" Width="125" VerticalAlignment="Top"/>
+                <Button Margin="52,348,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125" Background="#FF10D5A6" Content="debug" Foreground="White" Click="Button_Click"/>
+                <Button Margin="52,381,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125" Background="#FF10D5A6" Content="UR On/Off" Foreground="White" Click="Button_Click_1"/>
+                <Label Content="laser:" Height="28" Width="39" Margin="10,282,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <TextBox Height="28" Width="125" Margin="52,315,0,0" x:Name="safetyStatus" IsReadOnly="True" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Grid>
+        </GroupBox>
+        <Button x:Name="HomeButton" Style="{DynamicResource RoundCorner}" Margin="39,60,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Home" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="HomeButton_Click" />
+        <Button x:Name="AlignButton" Style="{DynamicResource RoundCorner}"  Margin="39,160,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Align" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="AlignButton_Click" />
+        <Button x:Name="CalibrateButton" Style="{DynamicResource RoundCorner}"  Margin="39,260,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Calibrate" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="CalibrateButton_Click" />
+        <Button x:Name="TrackButton" IsEnabled="False" Style="{DynamicResource RoundCorner}"  Margin="39,360,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Track" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="TrackButton_Click" />
+        <Button x:Name="SettingsButton" Style="{DynamicResource RoundCornerWhiteSmokeBackground}"  Margin="0,0,10,10" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="250" Background="WhiteSmoke" Content="Settings" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="SettingsButton_Click" />
+        <Button x:Name="SettingsOn" Style="{DynamicResource RoundCorner}"  Margin="0,762,10,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Right" Width="134" Background="WhiteSmoke" Content="On/Off" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="Button_Click_1" />
+        <GroupBox Header="Force Sensor" FontSize="18" Margin="0,371,10,0" Grid.Row="1" HorizontalAlignment="Right" Width="444" Height="150" VerticalAlignment="Top" >
+            <Grid>
+                <Rectangle Fill="White" Opacity="0.6"/>
+                <Ellipse x:Name="ForceConnected" Height="40" Width="40" Fill="Gray" Margin="10,10,382,0" VerticalAlignment="Top"/>
+                <Label Width="150" FontSize="20" Content="Connected" Margin="55,11,227,0" Height="41" VerticalAlignment="Top"/>
+                <Ellipse x:Name="ForceOverLimit" Height="40" Width="40" Fill="Gray" Margin="10,56,382,0" VerticalAlignment="Top"/>
+                <Label FontSize="20" Content="Force Over Limit" Margin="55,57,117,0" Height="41" VerticalAlignment="Top"/>
+                <Button x:Name="TareForce" Style="{DynamicResource RoundCorner}"  Margin="0,57,17,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100" Background="WhiteSmoke" Content="Tare" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="20" Click="TareForce_Click" />
+
+            </Grid>
+        </GroupBox>
+        <Button x:Name="CalibrateButton_V2" Style="{DynamicResource RoundCorner}"  Margin="294,260,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Manual" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="CalibrateButton_V2_Click" />
+        <Button x:Name="SaveLocationButton" Style="{DynamicResource RoundCorner}"  Margin="294,160,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Save Location" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="SaveLocationButton_Click" />
+        <Button x:Name="LoadLocationButton" Style="{DynamicResource RoundCorner}"  Margin="549,160,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Load Location" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="LoadLocationButton_Click" />
+
+    </Grid>
+</Window>

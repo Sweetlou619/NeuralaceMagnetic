@@ -1,0 +1,68 @@
+﻿<Window x:Class="NeuralaceMagnetic.CalibrationManualWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Manual Calibration Window"
+        Height="863.75" Width="1148.243" Background="#FF10D5A6" WindowStartupLocation="CenterOwner" Closing="Window_Closing" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75"/>
+            <RowDefinition Height="200*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Label Name="LabelHeader" Foreground="White" Content="Manual Calibration" HorizontalContentAlignment="Center" Height="65" VerticalAlignment="Top" FontSize="22"></Label>
+            <Label Name="LabelInstructions" Foreground="White" Content="Jog the arm into the best treatment area" HorizontalContentAlignment="Center" Height="38" FontSize="18" VerticalAlignment="Top" Margin="0,37,0,0"></Label>
+        </Grid>
+        <Grid Grid.Row="1" Background="LightGray">
+            <GroupBox Header="XY Position Controls" Margin="10,10,0,0" Height="503" VerticalAlignment="Top" HorizontalAlignment="Left" Width="412">
+                <Grid>
+                    <Button x:Name="JogUp" Margin="135,22,135,0" Height="130" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="5" Click="JogUp_Click" />
+                    <Button x:Name="JogDown" Margin="135,280,135,0" Height="130" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="6" Click="JogDown_Click" />
+                    <Button x:Name="JogLeft" Margin="5,152,265,0" Height="130" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="3" Click="JogLeft_Click" />
+                    <Button x:Name="JogRight" Margin="265,152,5,0" Height="130" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="4" Click="JogRight_Click" />
+                    <ComboBox Name="XYMoveDistance" Margin="73,425,76,0" Height="40" VerticalAlignment="Top" SelectedIndex="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                        <ComboBoxItem>1 mm</ComboBoxItem>
+                        <ComboBoxItem>5 mm</ComboBoxItem>
+                        <ComboBoxItem>10 mm</ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Z Position Controls" Margin="427,10,0,0" Height="503" VerticalAlignment="Top" HorizontalAlignment="Left" Width="214">
+                <Grid>
+                    <Button x:Name="JogUp_Z" Margin="37,10,0,0" Height="130" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="5" Click="JogUp_Z_Click" HorizontalAlignment="Left" Width="130" />
+                    <Button x:Name="JogDown_Z" Margin="37,145,0,0" Height="130" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="6" Click="JogDown_Z_Click" HorizontalAlignment="Left" Width="130" />
+                    <Button x:Name="MoveToZ" Background="White" Content="Move to ToF Distance" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="15" Height="41" VerticalAlignment="Bottom" Margin="10,0,10,61" Click="MoveToZ_Click"/>
+
+                    <ComboBox Name="ZMoveDistance" Margin="9,425,10,0" Height="40" VerticalAlignment="Top" SelectedIndex="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                        <ComboBoxItem>1 mm</ComboBoxItem>
+                        <ComboBoxItem>5 mm</ComboBoxItem>
+                    </ComboBox>
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Move History" Margin="889,10,0,0" Height="503" VerticalAlignment="Top" HorizontalAlignment="Left" Width="241">
+                <Grid>
+                    <ListBox Name="HistoryBox" MouseDoubleClick="ListBox_MouseDoubleClick" ToolTip="Double click to move to the selected treatment area" Margin="5,5,5,107">
+                    </ListBox>
+                    <Button x:Name="MoveTo" Background="White" Content="Move to Selected Point" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="15" Height="41" VerticalAlignment="Bottom" Margin="5,0,5,15" Click="MoveTo_Click"/>
+                    <Button x:Name="CreateSave" Background="White" Content="Create Save Point" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="15" Height="41" VerticalAlignment="Bottom" Margin="5,0,5,61" Click="CreateSave_Click" />
+
+                </Grid>
+            </GroupBox>
+            <Button x:Name="Complete" Margin="281,0,286,10" Background="White" Content="Complete" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Height="84" VerticalAlignment="Bottom" Click="Complete_Click"/>
+            <Button x:Name="Trigger" Margin="281,530,286,0" Height="84" VerticalAlignment="Top" Background="White" Content="Trigger Stimulation" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="Trigger_Click"/>
+            <GroupBox Header="Angle Position Controls" Margin="646,10,0,0" Height="503" VerticalAlignment="Top" HorizontalAlignment="Left" Width="238">
+                <Grid>
+                    <Label Margin="17,10,10,443">Axis 1</Label>
+                    <Button x:Name="JogAngle1_Pos" Margin="10,43,0,0" Height="100" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="3" HorizontalAlignment="Left" Width="100" RenderTransformOrigin="0.462,0.356" Click="JogAngle1_Pos_Click" />
+                    <Button x:Name="JogAngle1_Neg" Margin="116,43,0,0" Height="100" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="4" HorizontalAlignment="Left" Width="100" RenderTransformOrigin="0.462,0.356" Click="JogAngle1_Neg_Click" />
+                    <Button x:Name="JogAngle2_Pos" Margin="10,188,0,0" Height="100" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="3" HorizontalAlignment="Left" Width="100" RenderTransformOrigin="0.462,0.356" Click="JogAngle2_Pos_Click" />
+                    <Button x:Name="JogAngle2_Neg" Margin="116,188,0,0" Height="100" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="4" HorizontalAlignment="Left" Width="100" RenderTransformOrigin="0.462,0.356" Click="JogAngle2_Neg_Click" />
+                    <Button x:Name="JogAngle3_Pos" Margin="10,336,0,0" Height="100" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="3" HorizontalAlignment="Left" Width="100" RenderTransformOrigin="0.462,0.356" Click="JogAngle3_Pos_Click" />
+                    <Button x:Name="JogAngle3_Neg" Margin="116,336,0,0" Height="100" VerticalAlignment="Top" Background="White" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontSize="80" FontFamily="Marlett" Content="4" HorizontalAlignment="Left" Width="100" RenderTransformOrigin="0.462,0.356" Click="JogAngle3_Neg_Click" />
+                    <Label Margin="17,155,10,298" Content="Axis 2"/>
+                    <Label Margin="17,303,10,150" Content="Axis 3"/>
+                </Grid>
+            </GroupBox>
+
+        </Grid>
+    </Grid>
+</Window>

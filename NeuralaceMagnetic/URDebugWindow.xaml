@@ -1,0 +1,33 @@
+﻿<Window x:Class="NeuralaceMagnetic.URDebugWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeuralaceMagnetic"
+        mc:Ignorable="d"
+        Title="Universal Robot Debug"
+        Height="500" Width="500" MaxHeight="500" MaxWidth="500" Background="#FF10D5A6" Closing="Window_Closing">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="200*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Label Foreground="White" Content="Hold Shift and move mouse in the gray box to move the robot" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Top"></Label>
+            <ComboBox Height="24" Width="75" Margin="35,52,0,0" VerticalAlignment="Top" SelectedIndex="0" Name="XAxisCombo" HorizontalAlignment="Left">
+                <ComboBoxItem Content="X"></ComboBoxItem>
+                <ComboBoxItem Content="Y"></ComboBoxItem>
+                <ComboBoxItem Content="Z"></ComboBoxItem>
+            </ComboBox>
+            <ComboBox Height="24" Width="75" Margin="205,52,0,0" VerticalAlignment="Top" SelectedIndex="1" Name="YAxisCombo" HorizontalAlignment="Left">
+                <ComboBoxItem Content="X"></ComboBoxItem>
+                <ComboBoxItem Content="Y"></ComboBoxItem>
+                <ComboBoxItem Content="Z"></ComboBoxItem>
+            </ComboBox>
+            <ComboBox Height="24" Width="75" Margin="377,52,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <Label Foreground="White" Content="X Axis" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Top" Margin="35,25,382,0"/>
+            <Label Foreground="White" Content="Y Axis" HorizontalContentAlignment="Center" Height="25" VerticalAlignment="Top" Margin="205,25,212,0"/>
+        </Grid>
+        <Grid Name="MouseGrid" Grid.Row="1" Background="LightGray"/>
+    </Grid>
+</Window>
