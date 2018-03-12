@@ -4,15 +4,16 @@
              xmlns:local="clr-namespace:NeuralaceMagnetic">
     <Application.Resources>
         <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
-
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid x:Name="grid">
-                            <Border x:Name="border" CornerRadius="20" BorderBrush="#FF10D5A6" Background="White" BorderThickness="2">
+                            <Border x:Name="border" CornerRadius="20" BorderBrush="#FF10D5A6" Background="{TemplateBinding Background}" BorderThickness="2">
                                 <ContentPresenter HorizontalAlignment="Center"
                          VerticalAlignment="Center"
                          TextElement.FontWeight="Bold"></ContentPresenter>
@@ -40,42 +41,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="RoundCornerWhiteSmokeBackground" TargetType="{x:Type Button}">
-
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid x:Name="grid">
-                            <Border x:Name="border" CornerRadius="20" BorderBrush="#FF10D5A6" Background="WhiteSmoke" BorderThickness="2">
-                                <ContentPresenter HorizontalAlignment="Center"
-                         VerticalAlignment="Center"
-                         TextElement.FontWeight="Bold"></ContentPresenter>
-                            </Border>
-
-                        </Grid>
-                        <ControlTemplate.Triggers>
-
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <SolidColorBrush Color="#FF8CB0E4" Opacity="0.3"></SolidColorBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" TargetName="border" Value="#FF33962B"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
-                            </Trigger>
-
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+        <Style x:Key="RoundCornerWhiteSmokeBackground" TargetType="{x:Type Button}" BasedOn="{StaticResource RoundCorner}">
+            <Setter Property="Background" Value="WhiteSmoke"/>
         </Style>
     </Application.Resources>
 </Application>

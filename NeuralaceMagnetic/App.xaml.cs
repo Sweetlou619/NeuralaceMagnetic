@@ -61,7 +61,7 @@ namespace NeuralaceMagnetic
                 Process[] processList = Process.GetProcessesByName("Track");
                 if (processList.Count() == 0)
                 {
-                    Process.Start(@"C:\Program Files\Northern Digital Inc\ToolBox\Track.exe");
+                    //Process.Start(@"C:\Program Files\Northern Digital Inc\ToolBox\Track.exe");
                     Thread.Sleep(5000);
                 }
                 NeuralaceMagnetic.App app = new NeuralaceMagnetic.App();
