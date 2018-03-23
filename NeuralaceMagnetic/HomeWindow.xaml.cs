@@ -38,7 +38,7 @@ namespace NeuralaceMagnetic
         private void MoveRobotToHome_Click(object sender, RoutedEventArgs e)
         {
             App.Current.URController.MoveToHomePostition();
-            CalibrateCameraWithRobot.IsEnabled = true;
+            CalibrateCameraWithRobotBtn.IsEnabled = true;
         }
 
         double RadianToAngle(double rad)
@@ -68,6 +68,11 @@ namespace NeuralaceMagnetic
 
         private void CalibrateCameraWithRobot_Click(object sender, RoutedEventArgs e)
         {
+            CalibrateCameraWithRobot();
+        }
+
+        private void CalibrateCameraWithRobot()
+        {
             bool angleFound = false;
             for (int i = 0; i < 10; i++)
             {
@@ -90,11 +95,22 @@ namespace NeuralaceMagnetic
                 double degreeFound = RadianToAngle(radianAngleFound);
                 double zDegreeFound = RadianToAngle(radianZAngleFound);
 
-                MessageBox.Show("The angles " + degreeFound + " and " + zDegreeFound + " were found and will be used for calibration!",
-                    "Angle found",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
-                Complete.IsEnabled = true;
+                if (MessageBox.Show("The angles " + degreeFound + " and " + zDegreeFound + " were found. Do you want to use these angles for camera calibration?",
+                    "Angle set",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Information)
+                == MessageBoxResult.Yes)
+                {
+                    App.Current.MachineHomed = true;
+
+
+                    //double zBias = DegreeToRadian(20);
+                    //double zWithBias = 0.001 * radianZAngleFound;
+
+                    App.Current.CoordinateTranslator.SetBaseRotation(radianAngleFound, radianZAngleFound);// zWithBias);
+                }
+                this.DialogResult = false;
+                this.Close();
             }
             else
             {
@@ -103,29 +119,6 @@ namespace NeuralaceMagnetic
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
-        }
-
-        private void Complete_Click(object sender, RoutedEventArgs e)
-        {
-            double degreeFound = RadianToAngle(radianAngleFound);
-            double zDegreeFound = RadianToAngle(radianZAngleFound);
-
-            if (MessageBox.Show("The angles " + degreeFound + " and " + zDegreeFound + " were found. Do you want to use these angles for camera calibration?",
-                    "Angle set",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Information)
-                == MessageBoxResult.Yes)
-            {
-                App.Current.MachineHomed = true;
-
-
-                //double zBias = DegreeToRadian(20);
-                //double zWithBias = 0.001 * radianZAngleFound;
-
-                App.Current.CoordinateTranslator.SetBaseRotation(radianAngleFound, radianZAngleFound);// zWithBias);
-            }
-            this.DialogResult = false;
-            this.Close();
         }
     }
 }
