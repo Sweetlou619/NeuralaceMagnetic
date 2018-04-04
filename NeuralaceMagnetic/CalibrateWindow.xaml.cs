@@ -260,6 +260,8 @@ namespace NeuralaceMagnetic
 
         void MoveToPoint(Point3D pointToMove, bool donottriggerstim = false, bool trackz = true, bool slowMoveSpeed = false)
         {
+            Thread.Sleep(Convert.ToInt16(App.Current.ApplicationSettings.MaxTrackingTimeWindowMS + 300));
+
             App.Current.URController.UpdateRobotCoordinate(
                        pointToMove.X,
                        pointToMove.Y,
@@ -270,8 +272,10 @@ namespace NeuralaceMagnetic
 
             if (doZTracking && trackz)
             {
-                Thread.Sleep(Convert.ToInt16(App.Current.ApplicationSettings.MaxTrackingTimeWindowMS + 300));
+                Thread.Sleep(500);
+
                 pointToMove = TrackZAndUpdateStartPoint(pointToMove, 0);
+
                 App.Current.URController.UpdateRobotCoordinate(
                        pointToMove.X,
                        pointToMove.Y,
