@@ -23,7 +23,7 @@ namespace NeuralaceMagnetic.Controls
             public double MaxTrackingTimeWindowMS = 300;
             public double MaxTrackingMovePerWindowMM = 50;
             public bool TrackTOFSensor = true;
-            public double TOFDistance = 45;
+            public double TOFDistance = 100;
             public string ForceSensorIpAddress = "192.168.1.11";
             public double ForceSensorThresholdNewtons = 10;
             public double ForceRetractDistanceMM = 25;
@@ -39,7 +39,7 @@ namespace NeuralaceMagnetic.Controls
         public double MaxTrackingTimeWindowMS = 300;
         public double MaxTrackingMovePerWindowMM = 50;
         public bool TrackTOFSensor = true;
-        public double TOFDistance = 45;
+        public double TOFDistance = 100;
         public string ForceSensorIpAddress = "192.168.1.11";
         public double ForceSensorThresholdNewtons = 10;
         public double ForceRetractDistanceMM = 25;
