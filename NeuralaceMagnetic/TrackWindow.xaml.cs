@@ -24,6 +24,7 @@ namespace NeuralaceMagnetic
     {
         double centerPixelOffset = 155;
         private DispatcherTimer uiTimer;
+        private Thread backgroundThread;
         Controls.TrackCameraWithRobot robotTrack = new Controls.TrackCameraWithRobot(
             App.Current.URController,
             App.Current.URSecondController,
@@ -109,7 +110,17 @@ namespace NeuralaceMagnetic
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             robotTrack.Stop();
-            uiTimer.Stop();
+
+            if (uiTimer != null)
+            {
+                uiTimer.Stop();
+            }
+
+            if (backgroundThread != null)
+            {
+                backgroundThread.Abort();
+            }
+            
             App.Current.TorqueSensorTracking.SetForceTracking(false);
             App.Current.URController.DisableTrackingMotionSettings();
             App.Current.URController.SetVirtualEStopOverride(false);
@@ -117,7 +128,7 @@ namespace NeuralaceMagnetic
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            new Thread(() =>
+            backgroundThread = new Thread(() =>
                 {
                     Thread.CurrentThread.IsBackground = true;
 
@@ -139,7 +150,9 @@ namespace NeuralaceMagnetic
                         CreateUIUpdateThread();
                         DoTracking();
                     }));
-                }).Start();
+                });
+            
+            backgroundThread.Start();
         }
     }
 }
