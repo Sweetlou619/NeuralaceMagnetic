@@ -24,9 +24,21 @@ namespace NeuralaceMagnetic
     {
         double radianAngleFound = 0;
         double radianZAngleFound = 0;
+        bool homingStarted = false;
+
         public HomeWindow()
         {
             InitializeComponent();
+            App.Current.URController.PropertyChanged += URController_PropertyChanged;
+        }
+
+        private void URController_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "HasReachedPosition" && homingStarted)
+            {
+                MessageBox.Show("Going to calibrate camera!");
+                CalibrateCameraWithRobot();
+            }
         }
 
         private void DoneButton_Click(object sender, RoutedEventArgs e)
@@ -38,7 +50,8 @@ namespace NeuralaceMagnetic
         private void MoveRobotToHome_Click(object sender, RoutedEventArgs e)
         {
             App.Current.URController.MoveToHomePostition();
-            CalibrateCameraWithRobotBtn.IsEnabled = true;
+            MoveRobotToHome.IsEnabled = false;
+            homingStarted = true;
         }
 
         double RadianToAngle(double rad)
@@ -119,6 +132,11 @@ namespace NeuralaceMagnetic
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+        }
+
+        ~HomeWindow()
+        {
+            App.Current.URController.PropertyChanged -= URController_PropertyChanged;
         }
     }
 }
