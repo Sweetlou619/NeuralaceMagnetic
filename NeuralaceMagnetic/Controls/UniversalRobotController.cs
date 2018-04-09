@@ -68,7 +68,20 @@ namespace NeuralaceMagnetic.Controls
 
         bool isVirtualEStopped = false;
 
-        bool isVirtualEStoppedOverriden = false;
+        private bool virtualEstopOverride = false;
+        private bool isVirtualEStoppedOverriden
+        {
+            get
+            {
+                return virtualEstopOverride;
+            }
+            set 
+            {
+                virtualEstopOverride = value;
+            }
+        }
+
+
         bool isVirtualEStopMoveRunning = false;
         bool shouldJogAxis = false;
         bool jogPositive = true;
