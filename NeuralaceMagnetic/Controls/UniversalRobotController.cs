@@ -284,6 +284,11 @@ namespace NeuralaceMagnetic.Controls
             UniversalRobotRealTimeTCPStatus robotStatus = (UniversalRobotRealTimeTCPStatus)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(UniversalRobotRealTimeTCPStatus));
             if (IsGoodStatusPacket(robotStatus))
             {
+                if (robotStatus.QD_Actual_1 != URRobotStatus.QD_Actual_1 && robotStatus.QD_Actual_1 == (double)0)
+                {
+                    OnPropertyChanged("ProgramState");
+                }
+
                 URRobotStatus = robotStatus;
             }
             handle.Free();
@@ -608,7 +613,10 @@ namespace NeuralaceMagnetic.Controls
 
         private void OnPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
         #endregion
     }

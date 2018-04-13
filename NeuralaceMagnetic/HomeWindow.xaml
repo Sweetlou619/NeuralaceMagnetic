@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeuralaceMagnetic"
         mc:Ignorable="d"
-        Title="Home machine" Height="506.267" Width="661.427" MaxHeight="690.885" MaxWidth="905.386" WindowStartupLocation="CenterOwner">
+        Title="Home machine" Height="506.267" Width="661.427" MaxHeight="690.885" MaxWidth="905.386" WindowStartupLocation="CenterOwner" Closed="Window_Closed">
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>

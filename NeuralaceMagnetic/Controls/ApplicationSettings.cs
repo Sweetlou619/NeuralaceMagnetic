@@ -20,7 +20,7 @@ namespace NeuralaceMagnetic.Controls
             public double CalibrationTreatmentTimeS = 2;
             public string URIpAddress = "192.168.1.2";
             public string CameraIpAddress = "192.168.1.10";
-            public double MaxTrackingTimeWindowMS = 300;
+            public double MaxTrackingTimeWindowMS = 200;
             public double MaxTrackingMovePerWindowMM = 50;
             public bool TrackTOFSensor = true;
             public double TOFDistance = 100;
@@ -36,7 +36,7 @@ namespace NeuralaceMagnetic.Controls
         public double CalibrationTreatmentTimeS = 2;
         public string URIpAddress = "192.168.1.2";
         public string CameraIpAddress = "192.168.1.10";
-        public double MaxTrackingTimeWindowMS = 300;
+        public double MaxTrackingTimeWindowMS = 200;
         public double MaxTrackingMovePerWindowMM = 50;
         public bool TrackTOFSensor = true;
         public double TOFDistance = 100;

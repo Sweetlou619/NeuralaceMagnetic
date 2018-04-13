@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace NeuralaceMagnetic
 {
@@ -34,10 +35,13 @@ namespace NeuralaceMagnetic
 
         private void URController_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "HasReachedPosition" && homingStarted)
+            if (e.PropertyName == "ProgramState" && App.Current.URController.URRobotStatus.ProgramState == 1 && homingStarted)
             {
-                MessageBox.Show("Going to calibrate camera!");
-                CalibrateCameraWithRobot();
+                homingStarted = false;
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action) (() => 
+                {
+                    CalibrateCameraWithRobot();
+                }));
             }
         }
 
@@ -108,22 +112,8 @@ namespace NeuralaceMagnetic
                 double degreeFound = RadianToAngle(radianAngleFound);
                 double zDegreeFound = RadianToAngle(radianZAngleFound);
 
-                if (MessageBox.Show("The angles " + degreeFound + " and " + zDegreeFound + " were found. Do you want to use these angles for camera calibration?",
-                    "Angle set",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Information)
-                == MessageBoxResult.Yes)
-                {
-                    App.Current.MachineHomed = true;
-
-
-                    //double zBias = DegreeToRadian(20);
-                    //double zWithBias = 0.001 * radianZAngleFound;
-
-                    App.Current.CoordinateTranslator.SetBaseRotation(radianAngleFound, radianZAngleFound);// zWithBias);
-                }
-                this.DialogResult = false;
-                this.Close();
+                App.Current.MachineHomed = true;
+                App.Current.CoordinateTranslator.SetBaseRotation(radianAngleFound, radianZAngleFound);// zWithBias);
             }
             else
             {
@@ -132,9 +122,12 @@ namespace NeuralaceMagnetic
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+
+            this.DialogResult = false;
+            this.Close();
         }
 
-        ~HomeWindow()
+        private void Window_Closed(object sender, EventArgs e)
         {
             App.Current.URController.PropertyChanged -= URController_PropertyChanged;
         }
