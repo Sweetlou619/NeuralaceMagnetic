@@ -32,6 +32,7 @@ namespace NeuralaceMagnetic.Controls
         public UniversalRobotController.URRobotCoOrdinate CurrentSetPoint = new UniversalRobotController.URRobotCoOrdinate();
         public string LastErrorMessage = "";
         public bool ErrorHasOccurred = false;
+        public double AccelerationSpeed;
         RigidBodyDeltas lastCycleDeltas = new RigidBodyDeltas();
         bool hasURReachedCameraSetpoint = false;
 
@@ -58,7 +59,8 @@ namespace NeuralaceMagnetic.Controls
             PolarisCameraController polarisCameraController,
             ApplicationSettings applicationSettings,
             CameraURCoordinateTranslator cameraTranslator,
-            TorqueSensorTracking torqueSensor
+            TorqueSensorTracking torqueSensor,
+            double accelerationDefault
            )
         {
             urController = universalRobotController;
@@ -67,6 +69,7 @@ namespace NeuralaceMagnetic.Controls
             appSettings = applicationSettings;
             urController2 = secondaryController;
             torqueSensorTracker = torqueSensor;
+            AccelerationSpeed = accelerationDefault;
         }
 
         public double GetLaserSetPoint()
@@ -527,7 +530,9 @@ namespace NeuralaceMagnetic.Controls
                             setpoint.Z,
                             universalRobotCameraSetpoint.qx,
                             universalRobotCameraSetpoint.qy,
-                            universalRobotCameraSetpoint.qz);
+                            universalRobotCameraSetpoint.qz,
+                            false,
+                            AccelerationSpeed);
 
                         Console.WriteLine("Setpoint x:" + setpoint.X.ToString() +
                             ", y:" + setpoint.Y.ToString() +

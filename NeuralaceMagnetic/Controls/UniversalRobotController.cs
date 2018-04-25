@@ -229,7 +229,7 @@ namespace NeuralaceMagnetic.Controls
             }
         }
 
-        public void UpdateRobotCoordinate(double x, double y, double z, double qx, double qy, double qz, bool manualOverrideAngles = false)
+        public void UpdateRobotCoordinate(double x, double y, double z, double qx, double qy, double qz, bool manualOverrideAngles = false, double accelerationSpeed = DefaultMoveCommandTimeMS)
         {
             if (isVirtualEStopMoveRunning)
                 return;
@@ -242,6 +242,7 @@ namespace NeuralaceMagnetic.Controls
             moveCoOrdinate.qx = qx;
             moveCoOrdinate.qy = qy;
             moveCoOrdinate.qz = qz;
+            MoveCommandTimeMS = accelerationSpeed;
         }
 
         bool IsGoodStatusPacket(UniversalRobotRealTimeTCPStatus status)
@@ -384,14 +385,14 @@ namespace NeuralaceMagnetic.Controls
                 }
                 else
                 {
-                    command = "movej(p["
+                    command = "servoj(get_inverse_kin(p["
                     + moveX.ToString() + ", "
                     + moveY.ToString() + ", "
                     + moveZ.ToString() + ", ";
                     command += URRobotStatus.ToolVectorActual_4.ToString() + ", "
                             + URRobotStatus.ToolVectorActual_5.ToString() + ", "
-                            + URRobotStatus.ToolVectorActual_6.ToString() + "], ";
-                    command += "t=" + moveTime + ")"; //move over the time specified
+                            + URRobotStatus.ToolVectorActual_6.ToString() + "]), ";
+                    command += "t=" + moveTime + ", lookahead_time=0.03)"; //move over the time specified
                 }  
                 command += "\n";
 

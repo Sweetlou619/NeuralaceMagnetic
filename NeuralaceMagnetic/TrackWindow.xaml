@@ -23,6 +23,8 @@
                 <Ellipse Fill="#FF10D5A6" Height="20" Stroke="#FF10D5A6" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Margin="165,165,0,0"/>
 
             </Grid>
+            <Label Content="Acceleration (ms): " FontSize="22" Height="40" Width="200" Margin="10,252,687,358"/>
+            <TextBox Height="40" Text="{Binding AccelerationSpeed, Mode=TwoWay}" FontSize="22" Margin="10,297,821,313"/>
             <Button x:Name="DoneButton" Margin="158,0,162,10" Height="92" VerticalAlignment="Bottom" Background="White" Content="Complete" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="DoneButton_Click"/>
             <Label x:Name="errorLabel" Foreground="Tomato" Content="" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="70" Margin="10,0,10,107" VerticalAlignment="Bottom" FontSize="22" Width="877"/>
             <Label x:Name="statusLabel" Foreground="White" Content="" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="70" Margin="10,0,10,177" VerticalAlignment="Bottom" FontSize="22" Width="877"/>
