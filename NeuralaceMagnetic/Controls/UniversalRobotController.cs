@@ -9,11 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using System.Collections;
 
 namespace NeuralaceMagnetic.Controls
 {
-    public class UniversalRobotController : BackgroundWorker
+    public class UniversalRobotController : BackgroundWorker, INotifyPropertyChanged
     {
         public struct URRobotCoOrdinate
         {
@@ -24,6 +25,24 @@ namespace NeuralaceMagnetic.Controls
             public double qx;
             public double qy;
             public double qz;
+        }
+
+        private bool hasReachedPosition = true;
+        public bool HasReachedPosition
+        {
+            get
+            {
+                return hasReachedPosition;
+            }
+
+            set
+            {
+                if (value != hasReachedPosition)
+                {
+                    hasReachedPosition = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         private DateTime lastMoveTime = DateTime.MinValue;
@@ -39,8 +58,7 @@ namespace NeuralaceMagnetic.Controls
         private Queue<string> m_CommandQueue = new Queue<string>();
 
         private TcpClient m_URTcpClient;
-
-        bool hasReachedPosition = true;
+        
         URRobotCoOrdinate moveCoOrdinate;
         bool shouldUseAnglesInMove = false;
 
@@ -107,11 +125,6 @@ namespace NeuralaceMagnetic.Controls
             }
         }
 
-        public bool HasRobotReachedPosition()
-        {
-            return hasReachedPosition;
-        }
-
         public void UseTrackingMotionSettings()
         {
             MaximumMoveDistanceM = App.Current.ApplicationSettings.MaxTrackingMovePerWindowMM / 1000;
@@ -127,7 +140,7 @@ namespace NeuralaceMagnetic.Controls
         public void StopRobotMove()
         {
             fireDigitalOutputWhenPositionIsReached = false;
-            hasReachedPosition = true;
+            HasReachedPosition = true;
         }
 
         public void SetFreeDriveMode(bool freeDrive)
@@ -216,7 +229,7 @@ namespace NeuralaceMagnetic.Controls
             }
         }
 
-        public void UpdateRobotCoordinate(double x, double y, double z, double qx, double qy, double qz, bool manualOverrideAngles = false)
+        public void UpdateRobotCoordinate(double x, double y, double z, double qx, double qy, double qz, bool manualOverrideAngles = false, double accelerationSpeed = DefaultMoveCommandTimeMS)
         {
             if (isVirtualEStopMoveRunning)
                 return;
@@ -229,6 +242,7 @@ namespace NeuralaceMagnetic.Controls
             moveCoOrdinate.qx = qx;
             moveCoOrdinate.qy = qy;
             moveCoOrdinate.qz = qz;
+            MoveCommandTimeMS = accelerationSpeed;
         }
 
         bool IsGoodStatusPacket(UniversalRobotRealTimeTCPStatus status)
@@ -271,6 +285,11 @@ namespace NeuralaceMagnetic.Controls
             UniversalRobotRealTimeTCPStatus robotStatus = (UniversalRobotRealTimeTCPStatus)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(UniversalRobotRealTimeTCPStatus));
             if (IsGoodStatusPacket(robotStatus))
             {
+                if (robotStatus.QD_Actual_1 != URRobotStatus.QD_Actual_1 && robotStatus.QD_Actual_1 == (double)0)
+                {
+                    OnPropertyChanged("ProgramState");
+                }
+
                 URRobotStatus = robotStatus;
             }
             handle.Free();
@@ -302,7 +321,7 @@ namespace NeuralaceMagnetic.Controls
                 &&
                 lastMoveTime > moveCoOrdinate.setTime
                 &&
-                hasReachedPosition)
+                HasReachedPosition)
             {
                 isVirtualEStopMoveRunning = false;
                 isVirtualEStoppedOverriden = true;
@@ -312,13 +331,13 @@ namespace NeuralaceMagnetic.Controls
             //If the robot is not in a running state ignore all move commands
             if (!IsRobotAbleToPerformMove())
             {
-                hasReachedPosition = true;
+                HasReachedPosition = true;
                 lastMoveTime = DateTime.Now;
                 return;
             }
 
             if (moveCoOrdinate.setTime > lastMoveTime
-                || !hasReachedPosition)
+                || !HasReachedPosition)
             {
                 double moveX = moveCoOrdinate.x;
                 double moveY = moveCoOrdinate.y;
@@ -342,11 +361,11 @@ namespace NeuralaceMagnetic.Controls
                 //hasQZBeenLimited)
                 {
                     //if a move has been limited we will need to send another command
-                    hasReachedPosition = false;
+                    HasReachedPosition = false;
                 }
                 else
                 {
-                    hasReachedPosition = true;
+                    HasReachedPosition = true;
                 }
 
                 string moveTime = (MoveCommandTimeMS / 1000).ToString();
@@ -366,14 +385,14 @@ namespace NeuralaceMagnetic.Controls
                 }
                 else
                 {
-                    command = "movej(p["
+                    command = "servoj(get_inverse_kin(p["
                     + moveX.ToString() + ", "
                     + moveY.ToString() + ", "
                     + moveZ.ToString() + ", ";
                     command += URRobotStatus.ToolVectorActual_4.ToString() + ", "
                             + URRobotStatus.ToolVectorActual_5.ToString() + ", "
-                            + URRobotStatus.ToolVectorActual_6.ToString() + "], ";
-                    command += "t=" + moveTime + ")"; //move over the time specified
+                            + URRobotStatus.ToolVectorActual_6.ToString() + "]), ";
+                    command += "t=" + moveTime + ", lookahead_time=0.03)"; //move over the time specified
                 }  
                 command += "\n";
 
@@ -430,7 +449,7 @@ namespace NeuralaceMagnetic.Controls
         {
             if (fireDigitalOutputWhenPositionIsReached
                 && (moveCoOrdinate.setTime <= lastMoveTime
-                && hasReachedPosition
+                && HasReachedPosition
                 && (DateTime.Now - lastMoveTime).TotalMilliseconds > MoveCommandTimeMS + 100))
             {
                 FireDigitalOutput();
@@ -507,6 +526,7 @@ namespace NeuralaceMagnetic.Controls
         }
 
         bool freedriveLastState = false;
+        
         void CheckFreedriveToolButton()
         {
             bool currentState = IsToolFreedrivePressed();
@@ -588,5 +608,17 @@ namespace NeuralaceMagnetic.Controls
                 stop = DateTime.Now;
             }
         }
+
+        #region INotifyPropertyChanged Implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
     }
 }

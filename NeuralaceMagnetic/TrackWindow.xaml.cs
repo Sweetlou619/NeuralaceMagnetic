@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Media;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,23 +22,42 @@ namespace NeuralaceMagnetic
     /// <summary>
     /// Interaction logic for TrackWindow.xaml
     /// </summary>
-    public partial class TrackWindow : Window
+    public partial class TrackWindow : Window, INotifyPropertyChanged
     {
         double centerPixelOffset = 155;
         private DispatcherTimer uiTimer;
         private Thread backgroundThread;
-        Controls.TrackCameraWithRobot robotTrack = new Controls.TrackCameraWithRobot(
+        Controls.TrackCameraWithRobot robotTrack;
+
+        private double _AccelerationSpeed = 100;
+        public double AccelerationSpeed
+        {
+            get
+            {
+                return _AccelerationSpeed;
+            }
+            set
+            {
+                _AccelerationSpeed = value;
+                robotTrack.AccelerationSpeed = _AccelerationSpeed;
+                OnPropertyChanged();
+            }
+        }
+
+        public TrackWindow()
+        {
+            InitializeComponent();
+            this.DataContext = this;
+
+            robotTrack = new Controls.TrackCameraWithRobot(
             App.Current.URController,
             App.Current.URSecondController,
             App.Current.PolarisController,
             App.Current.ApplicationSettings,
             App.Current.CoordinateTranslator,
-            App.Current.TorqueSensorTracking
+            App.Current.TorqueSensorTracking,
+            _AccelerationSpeed
             );
-
-        public TrackWindow()
-        {
-            InitializeComponent();
         }
 
         void CreateUIUpdateThread()
@@ -154,5 +175,17 @@ namespace NeuralaceMagnetic
             
             backgroundThread.Start();
         }
+
+        #region INotifyPropertyChanged Implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        #endregion
     }
 }
