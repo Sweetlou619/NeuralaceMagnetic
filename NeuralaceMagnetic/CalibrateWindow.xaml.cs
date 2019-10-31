@@ -102,7 +102,8 @@ namespace NeuralaceMagnetic
         private void UiTimer_Tick(object sender, EventArgs e)
         {
             bool isForceOverLimit = UniversalRobotHelperFunctions.IsForceOverLimit();
-            if (App.Current.URController.IsVirtualEStopPressed() || isForceOverLimit)
+            bool virtualEStopPressed = App.Current.URController.IsVirtualEStopPressed();
+            if (virtualEStopPressed || isForceOverLimit)
             {
                 if (isRunningThroughAll)
                 {

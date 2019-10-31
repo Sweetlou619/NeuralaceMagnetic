@@ -30,7 +30,7 @@ namespace NeuralaceMagnetic.Controls
 
         public static bool IsForceOverLimit()
         {
-            return IsForceOverLimit(TareForceReading.X, TareForceReading.Y, TareForceReading.Z);
+            return IsForceOverLimit(App.Current.URController.URRobotStatus.TCPForce_1, App.Current.URController.URRobotStatus.TCPForce_2, App.Current.URController.URRobotStatus.TCPForce_3);
         }
 
         private static bool IsForceOverLimit(double xOffset, double yOffset, double zOffset)
@@ -81,24 +81,21 @@ namespace NeuralaceMagnetic.Controls
                 return analog;
             }
 
-            double totalV = 5;// 5.8;
-
-            //the laser reads reverse
-            double flippedAnalog = totalV - analog;
+            double totalV = 10;// 5.8;
 
             //too much noise
-            flippedAnalog = Math.Round(flippedAnalog, 3);
+            analog = Math.Round(analog, 3);
 
-            if (flippedAnalog >= totalV || flippedAnalog <= 0)
+            if (analog >= totalV || analog <= 0)
             {
                 return double.NaN;
             }
 
-            double lowerLimitMM = 100 - 35;//35;
-            double upperLimitMM = 100 + 35;//65;
+            double lowerLimitMM = 20;//35;
+            double upperLimitMM = 80;//65;
             double mmPerRange = upperLimitMM - lowerLimitMM;
             double mmPerV = mmPerRange / totalV;
-            double mmConverted = flippedAnalog * mmPerV;
+            double mmConverted = analog * mmPerV;
             double totalMM = mmConverted + lowerLimitMM;
 
             //the volatage varies which reading a single number lets round
@@ -109,7 +106,8 @@ namespace NeuralaceMagnetic.Controls
 
         public static double ConvertToMMFromCoil(double mmreading)
         {
-            double coilWidth = App.Current.ApplicationSettings.TOFDistance;//45.88;//35.88;
+            //TODO: Fix once coil is installed
+            double coilWidth = 0;// App.Current.ApplicationSettings.TOFDistance;//45.88;//35.88;
             return mmreading - coilWidth;
         }
 

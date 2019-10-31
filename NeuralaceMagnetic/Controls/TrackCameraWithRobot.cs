@@ -33,7 +33,12 @@ namespace NeuralaceMagnetic.Controls
         public string LastErrorMessage = "";
         public bool ErrorHasOccurred = false;
         public double AccelerationSpeed;
-        RigidBodyDeltas lastCycleDeltas = new RigidBodyDeltas();
+        UniversalRobotController.URRobotCoOrdinate lastCycleDeltas = new UniversalRobotController.URRobotCoOrdinate();
+
+        //RigidBodyDeltas lastCycleDeltas = new RigidBodyDeltas();
+        //Creating lasy cycle rpy delta
+
+
         bool hasURReachedCameraSetpoint = false;
 
         static int readPoolCount = 5;
@@ -45,6 +50,13 @@ namespace NeuralaceMagnetic.Controls
             public double xDelta;
             public double yDelta;
             public double zDelta;
+        }
+
+        struct RPY_RigidBodyDeltas
+        {
+            public double rDelta;
+            public double pDelta;
+            public double yDelta;
         }
 
         enum RigidBodyOptions
@@ -146,7 +158,9 @@ namespace NeuralaceMagnetic.Controls
             hasDeltaSetpointsBeenSet = true;
         }
 
-        RigidBodyDeltas ConvertRigidBodyIntoURSpace(RigidBodyDeltas polaris)
+
+        // Implemented RPY
+        UniversalRobotController.URRobotCoOrdinate ConvertRigidBodyIntoURSpace(UniversalRobotController.URRobotCoOrdinate polaris)
         {
             //positive x is toward the camera
             //positive y is to the right of the camera (camera pov)
@@ -159,16 +173,36 @@ namespace NeuralaceMagnetic.Controls
 
             //camera y positive is left and right
             RigidBodyDeltas converted = new RigidBodyDeltas();
-            converted.xDelta = (polaris.zDelta / 1000);
-            converted.yDelta = (polaris.yDelta / 1000);
-            converted.zDelta = (polaris.xDelta / 1000);// ((-polaris.xDelta) / 1000);
+            converted.xDelta = (polaris.z / 1000);
+            converted.yDelta = (polaris.y / 1000);
+            converted.zDelta = (polaris.x / 1000);// ((-polaris.xDelta) / 1000);
 
-            return converted;
+            RPY_RigidBodyDeltas rpy_converted = new RPY_RigidBodyDeltas();
+            rpy_converted.rDelta = (polaris.qz / 1000);
+            rpy_converted.pDelta = (polaris.qy / 1000);
+            rpy_converted.yDelta = (polaris.qz / 1000);
+
+            UniversalRobotController.URRobotCoOrdinate convertedDelta = new UniversalRobotController.URRobotCoOrdinate();
+
+            convertedDelta.x = converted.xDelta;
+            convertedDelta.y = converted.yDelta;
+            convertedDelta.z = converted.zDelta;
+            convertedDelta.qx = rpy_converted.rDelta;
+            convertedDelta.qy = rpy_converted.pDelta;
+            convertedDelta.qz = rpy_converted.yDelta;
+            return convertedDelta;
         }
 
-        RigidBodyDeltas GetRigidBodyDeltas()
+        UniversalRobotController.URRobotCoOrdinate GetRigidBodyDeltas()
         {
             RigidBodyDeltas delta = new RigidBodyDeltas();
+            RPY_RigidBodyDeltas RPYdelta = new RPY_RigidBodyDeltas();
+
+            Vector3D rpycurrentlocations = new Vector3D();
+            Vector3D rpyrigidbodysetpoints = new Vector3D();
+
+            UniversalRobotController.URRobotCoOrdinate convertedDelta = new UniversalRobotController.URRobotCoOrdinate();
+
             PolarisCameraController.PolarisRigidBody currentLocations = new PolarisCameraController.PolarisRigidBody();
             if (currentRigidBody == RigidBodyOptions.One)
             {
@@ -185,10 +219,30 @@ namespace NeuralaceMagnetic.Controls
             delta.xDelta = currentLocations.x - rigidBodySetpoints.x;
             delta.yDelta = currentLocations.y - rigidBodySetpoints.y;
             delta.zDelta = currentLocations.z - rigidBodySetpoints.z;
-            return ConvertRigidBodyIntoURSpace(delta);
+
+
+            //Converting current location and rigibody set points from quartenion to rpy
+
+            rpycurrentlocations = coordTrans.QuaternionToRPY(currentLocations.qo, currentLocations.qx, currentLocations.qy, currentLocations.qz);
+            rpyrigidbodysetpoints = coordTrans.QuaternionToRPY(rigidBodySetpoints.qo, rigidBodySetpoints.qx, rigidBodySetpoints.qy, rigidBodySetpoints.qz);
+
+            //Calculating RPYdelta
+            RPYdelta.rDelta = rpycurrentlocations.X - rpyrigidbodysetpoints.X;
+            RPYdelta.pDelta = rpycurrentlocations.Y - rpyrigidbodysetpoints.Y;
+            RPYdelta.yDelta = rpycurrentlocations.Z - rpyrigidbodysetpoints.Z;
+
+            convertedDelta.x = delta.xDelta;
+            convertedDelta.y = delta.yDelta;
+            convertedDelta.z = delta.zDelta;
+            convertedDelta.qx = RPYdelta.rDelta;
+            convertedDelta.qy = RPYdelta.pDelta;
+            convertedDelta.qz = RPYdelta.yDelta;
+
+
+            return ConvertRigidBodyIntoURSpace(convertedDelta);
         }
 
-        RigidBodyDeltas GetCameraRigidBody()
+        UniversalRobotController.URRobotCoOrdinate GetCameraRigidBody()
         {
             PolarisCameraController.RigidBodyIndex currentRigidBodyIndex = PolarisCameraController.RigidBodyIndex.UNKNOWN;
             PolarisCameraController.RigidBodyIndex backupRigidBodyIndex = PolarisCameraController.RigidBodyIndex.UNKNOWN;
@@ -274,24 +328,33 @@ namespace NeuralaceMagnetic.Controls
             //return false;
         }
 
-        bool HasRobotReachedCameraSetpoint(UniversalRobotController.URRobotCoOrdinate currentRobotCoord, Point3D setPoint)
+        // TODO: Implement for qx, qy and qz after defining setPoint properly
+        bool HasRobotReachedCameraSetpoint(UniversalRobotController.URRobotCoOrdinate currentRobotCoord, Point3D setPoint, Point3D rpy_setPoint)
         {
             double tolerance = 0.0002;
             if (Math.Abs(Math.Abs(currentRobotCoord.x) - Math.Abs(setPoint.X)) < tolerance &&
                 Math.Abs(Math.Abs(currentRobotCoord.y) - Math.Abs(setPoint.Y)) < tolerance &&
-                Math.Abs(Math.Abs(currentRobotCoord.z) - Math.Abs(setPoint.Z)) < tolerance)
+                Math.Abs(Math.Abs(currentRobotCoord.z) - Math.Abs(setPoint.Z)) < tolerance &&
+                Math.Abs(Math.Abs(currentRobotCoord.qx) - Math.Abs(rpy_setPoint.X)) < tolerance &&
+                Math.Abs(Math.Abs(currentRobotCoord.qy) - Math.Abs(rpy_setPoint.Y)) < tolerance &&
+                Math.Abs(Math.Abs(currentRobotCoord.qz) - Math.Abs(rpy_setPoint.Z)) < tolerance)
             {
                 return true;
             }
             return false;
         }
 
-        bool IsWithinRangeForLazerTracking(RigidBodyDeltas lastDeltas, RigidBodyDeltas currentDeltas)
+        //Implemented RPY to check the tolerance (TODO)
+
+        bool IsWithinRangeForLazerTracking(UniversalRobotController.URRobotCoOrdinate lastDeltas, UniversalRobotController.URRobotCoOrdinate currentDeltas)
         {
             double tolerance = 0.0002;
-            if (Math.Abs(Math.Abs(currentDeltas.xDelta) - Math.Abs(lastDeltas.xDelta)) < tolerance &&
-                Math.Abs(Math.Abs(currentDeltas.yDelta) - Math.Abs(lastDeltas.yDelta)) < tolerance &&
-                Math.Abs(Math.Abs(currentDeltas.zDelta) - Math.Abs(lastDeltas.zDelta)) < tolerance)
+            if (Math.Abs(Math.Abs(currentDeltas.x) - Math.Abs(lastDeltas.x)) < tolerance &&
+                Math.Abs(Math.Abs(currentDeltas.y) - Math.Abs(lastDeltas.y)) < tolerance &&
+                Math.Abs(Math.Abs(currentDeltas.z) - Math.Abs(lastDeltas.z)) < tolerance &&
+                Math.Abs(Math.Abs(currentDeltas.qx) - Math.Abs(lastDeltas.qx)) < tolerance &&
+                Math.Abs(Math.Abs(currentDeltas.qy) - Math.Abs(lastDeltas.qy)) < tolerance &&
+                Math.Abs(Math.Abs(currentDeltas.qz) - Math.Abs(lastDeltas.qz)) < tolerance)
             {
                 return true;
             }
@@ -343,17 +406,28 @@ namespace NeuralaceMagnetic.Controls
             }
         }
 
-        Point3D GetSetpointFromDeltas(RigidBodyDeltas deltas)
+        //TODO (Implemented rounding operation for rpy deltas)
+
+        (Point3D,Point3D) GetSetpointFromDeltas(UniversalRobotController.URRobotCoOrdinate convertedDelta)
         {
             //ignore z moves
             //deltas.zDelta = 0;
 
-            deltas.xDelta = Math.Round(deltas.xDelta, 5);
-            deltas.yDelta = Math.Round(deltas.yDelta, 5);
-            deltas.zDelta = Math.Round(deltas.zDelta, 5);
+            convertedDelta.x = Math.Round(convertedDelta.x, 5);
+            convertedDelta.y = Math.Round(convertedDelta.y, 5);
+            convertedDelta.z = Math.Round(convertedDelta.z, 5);
+            convertedDelta.qx = Math.Round(convertedDelta.qx, 5);
+            convertedDelta.qy = Math.Round(convertedDelta.qy, 5);
+            convertedDelta.qz = Math.Round(convertedDelta.qz, 5);
 
-            Point3D deltaPoint = new Point3D(deltas.xDelta, deltas.yDelta, deltas.zDelta);
+
+
+
+            Point3D deltaPoint = new Point3D(convertedDelta.x, convertedDelta.y, convertedDelta.z);
             Point3D deltaWithRotation = coordTrans.GetPointWithBaseRoation(deltaPoint);
+
+            Point3D rpy_deltaPoint = new Point3D(convertedDelta.qx, convertedDelta.qy, convertedDelta.qz);
+            Point3D rpy_deltaWithRotation = coordTrans.GetPointWithBaseRoation(rpy_deltaPoint);
 
             //then we can apply the deltas that were returned
             Point3D setpoint = new Point3D(
@@ -361,7 +435,14 @@ namespace NeuralaceMagnetic.Controls
                 universalRobotCameraSetpoint.y + deltaWithRotation.Y,
                 universalRobotCameraSetpoint.z + deltaWithRotation.Z
                 );
-            return setpoint;
+
+            Point3D rpy_setpoint = new Point3D(
+                universalRobotCameraSetpoint.qx + rpy_deltaWithRotation.X,
+                universalRobotCameraSetpoint.qy + rpy_deltaWithRotation.Y,
+                universalRobotCameraSetpoint.qz + rpy_deltaWithRotation.Z
+                );
+
+            return (setpoint, rpy_setpoint);
         }
 
         protected override void OnDoWork(DoWorkEventArgs e)
@@ -414,15 +495,30 @@ namespace NeuralaceMagnetic.Controls
                     CheckForceSensor();
 
                     //this will find a marker and set the current xyz of robot
-                    RigidBodyDeltas deltas = GetCameraRigidBody();
+                    //TODO: Define rpy_deltas properly
+                    //RigidBodyDeltas deltas, RPY_RigidBodyDeltas  rpy_deltas = GetCameraRigidBody();
+                    //RPY_RigidBodyDeltas rpy_deltas = GetCameraRigidBody();
+
+                    UniversalRobotController.URRobotCoOrdinate convertedDelta = GetCameraRigidBody();
+
+
+
                     //Get the setpoint from the camera
-                    Point3D setpoint = GetSetpointFromDeltas(deltas);
+                    //TODO: (Implemented rpy_setpoint)
+                    //Check
+                    Point3D setpoint = new Point3D();
+                    Point3D rpy_setpoint = new Point3D();
+                    (setpoint, rpy_setpoint) = GetSetpointFromDeltas(convertedDelta);
+
+
 
                     //end camera tracking
                     UniversalRobotController.URRobotCoOrdinate currentRobotCoord = urController.GetCurrentLocation();
 
                     //make sure that the robot has reached its position
-                    bool isWithingRangeForZMoves = IsWithinRangeForLazerTracking(lastCycleDeltas, deltas);
+
+                    //TODO
+                    bool isWithingRangeForZMoves = IsWithinRangeForLazerTracking(lastCycleDeltas, convertedDelta);
                     if (!isWithingRangeForZMoves)
                     {
                         hasRobotReachedPosition = false;
@@ -430,9 +526,9 @@ namespace NeuralaceMagnetic.Controls
                         {
                             ResetDeltaFlag();
                             //this will find a marker and set the current xyz of robot
-                            deltas = GetCameraRigidBody();
+                            convertedDelta = GetCameraRigidBody();
                             //Get the setpoint from the camera
-                            setpoint = GetSetpointFromDeltas(deltas);
+                            (setpoint, rpy_setpoint) = GetSetpointFromDeltas(convertedDelta);
                             hasStartedTrackingLazer = false;
                         }
 
@@ -441,7 +537,7 @@ namespace NeuralaceMagnetic.Controls
                     else
                     {
                         //only start doing z tracking once the position has been met by the robot                        
-                        bool hasRobotReachedCameraCoOrd = HasRobotReachedCameraSetpoint(currentRobotCoord, setpoint);
+                        bool hasRobotReachedCameraCoOrd = HasRobotReachedCameraSetpoint(currentRobotCoord, setpoint, rpy_setpoint);
                         if (hasRobotReachedPosition ||
                             hasRobotReachedCameraCoOrd)
                         {
@@ -449,7 +545,7 @@ namespace NeuralaceMagnetic.Controls
                             hasRobotReachedPosition = true;
                         }
                     }
-                    lastCycleDeltas = deltas;
+                    lastCycleDeltas = convertedDelta;
 
                     if (this.appSettings.TrackTOFSensor && !double.IsNaN(initialLaserReadMM))
                     {
@@ -522,16 +618,18 @@ namespace NeuralaceMagnetic.Controls
 
                     CheckIfPointIsOutOfRange(setpoint);
 
+
+                    //TODO
                     if (shouldUpdateMoveSetpoint)
                     {
                         urController.UpdateRobotCoordinate(
                             setpoint.X,
                             setpoint.Y,
                             setpoint.Z,
-                            universalRobotCameraSetpoint.qx,
-                            universalRobotCameraSetpoint.qy,
-                            universalRobotCameraSetpoint.qz,
-                            false,
+                            rpy_setpoint.X,
+                            rpy_setpoint.Y,
+                            rpy_setpoint.Z,
+                            true,
                             AccelerationSpeed);
 
                         Console.WriteLine("Setpoint x:" + setpoint.X.ToString() +
@@ -539,12 +637,13 @@ namespace NeuralaceMagnetic.Controls
                             ", z:" + setpoint.Z.ToString());
 
                         //Update the current setpoint for the ui
+                        //TODO
                         CurrentSetPoint.x = setpoint.X;
                         CurrentSetPoint.y = setpoint.Y;
                         CurrentSetPoint.z = setpoint.Z;
-                        CurrentSetPoint.qx = universalRobotCameraSetpoint.qx;
-                        CurrentSetPoint.qy = universalRobotCameraSetpoint.qy;
-                        CurrentSetPoint.qz = universalRobotCameraSetpoint.qz;
+                        CurrentSetPoint.qx = rpy_setpoint.X;
+                        CurrentSetPoint.qy = rpy_setpoint.Y;
+                        CurrentSetPoint.qz = rpy_setpoint.Z;
                     }
 
 

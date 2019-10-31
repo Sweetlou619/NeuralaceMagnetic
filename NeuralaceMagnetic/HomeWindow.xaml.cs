@@ -23,6 +23,9 @@ namespace NeuralaceMagnetic
     /// </summary>
     public partial class HomeWindow : Window
     {
+        const double HOME_POSITION = 1.5708;
+        const double NEGATIVE_HOME_POSITION = -1.5708;
+
         double radianAngleFound = 0;
         double radianZAngleFound = 0;
         bool homingStarted = false;
@@ -35,7 +38,7 @@ namespace NeuralaceMagnetic
 
         private void URController_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "ProgramState" && App.Current.URController.URRobotStatus.ProgramState == 1 && homingStarted)
+            if (e.PropertyName == "ProgramState" /*&& App.Current.URController.URRobotStatus.ProgramState == 1*/ && homingStarted)
             {
                 homingStarted = false;
                 this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action) (() => 
@@ -53,9 +56,25 @@ namespace NeuralaceMagnetic
 
         private void MoveRobotToHome_Click(object sender, RoutedEventArgs e)
         {
-            App.Current.URController.MoveToHomePostition();
-            MoveRobotToHome.IsEnabled = false;
-            homingStarted = true;
+            App.Current.MachineHomed = false;
+
+            if (Math.Round(App.Current.URController.URRobotStatus.Q_Actual_1, 4) == HOME_POSITION &&
+                Math.Round(App.Current.URController.URRobotStatus.Q_Actual_3, 4) == HOME_POSITION &&
+                Math.Round(App.Current.URController.URRobotStatus.Q_Actual_2, 4) == NEGATIVE_HOME_POSITION &&
+                Math.Round(App.Current.URController.URRobotStatus.Q_Actual_4, 4) == NEGATIVE_HOME_POSITION)
+            {
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    CalibrateCameraWithRobot();
+                }));
+            }
+            else
+            {
+                App.Current.URController.MoveToHomePostition();
+                MoveRobotToHome.IsEnabled = false;
+                homingStarted = true;
+            }
+            
         }
 
         double RadianToAngle(double rad)

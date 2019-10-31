@@ -25,6 +25,24 @@ namespace NeuralaceMagnetic.Controls
             public double qx;
             public double qy;
             public double qz;
+
+            public override String ToString()
+            {
+                return String.Format("{0:N2}, {1:N2}, {2:N2}, {3:N2}, {4:N2}, {5:N2}", x, y, z, qx, qy, qz);
+            }
+
+            public static URRobotCoOrdinate operator - (URRobotCoOrdinate r1, URRobotCoOrdinate r2)
+            {
+                URRobotCoOrdinate newVal = new URRobotCoOrdinate();
+                newVal.x = r1.x - r2.x;
+                newVal.y = r1.y - r2.y;
+                newVal.z = r1.z - r2.z;
+                newVal.qx = r1.qx - r2.qx;
+                newVal.qy = r1.qy - r2.qy;
+                newVal.qz = r1.qz - r2.qz;
+
+                return newVal;
+            }
         }
 
         private bool hasReachedPosition = true;
@@ -50,6 +68,13 @@ namespace NeuralaceMagnetic.Controls
         private double MaximumMoveDistanceM = DefaultMaximumMoveDistanceM; //40mm
         private const double DefaultMoveCommandTimeMS = 350; //per 250ms
         private double MoveCommandTimeMS = DefaultMoveCommandTimeMS; //per 250ms
+        private UniversalRobotNoPendantController universalRobotNoPendantController
+        {
+            get
+            {
+                return App.Current.URNoPendantControl;
+            }
+        }
 
         public bool IsUniversalRobotConnected = false;
         public UniversalRobotRealTimeTCPStatus URRobotStatus;
@@ -101,7 +126,7 @@ namespace NeuralaceMagnetic.Controls
 
         public bool GetFreeDriveStatus()
         {
-            return isVirtualEStopped;
+            return universalRobotNoPendantController.IsFreeDriveEnabled();
         }
 
         void ConnectToUniversalRobotTCPServer()
@@ -147,11 +172,11 @@ namespace NeuralaceMagnetic.Controls
         {
             if (freeDrive)
             {
-                m_CommandQueue.Enqueue("set_digital_out(0, True)\n");
+                universalRobotNoPendantController.TurnOnFreeDrive();
             }
             else
             {
-                m_CommandQueue.Enqueue("set_digital_out(0, False)\n");
+                universalRobotNoPendantController.TurnOffFreeDrive();
             }
         }
 
@@ -229,12 +254,12 @@ namespace NeuralaceMagnetic.Controls
             }
         }
 
-        public void UpdateRobotCoordinate(double x, double y, double z, double qx, double qy, double qz, bool manualOverrideAngles = false, double accelerationSpeed = DefaultMoveCommandTimeMS)
+        public void UpdateRobotCoordinate(double x, double y, double z, double qx, double qy, double qz, bool manualOverrideAngles = true, double accelerationSpeed = DefaultMoveCommandTimeMS)
         {
             if (isVirtualEStopMoveRunning)
                 return;
 
-            shouldUseAnglesInMove = manualOverrideAngles;
+            shouldUseAnglesInMove = false;//manualOverrideAngles;
             moveCoOrdinate.setTime = DateTime.Now;
             moveCoOrdinate.x = x;
             moveCoOrdinate.y = y;
@@ -269,16 +294,18 @@ namespace NeuralaceMagnetic.Controls
             return ableToMove;
         }
 
+        private const int UNIVERSAL_ROBOT_TCP_STATUS_BUFFER_SIZE = 1116;
+
         void UpdateUniversalRobotStatus()
         {
             Stream stream = m_URTcpClient.GetStream();
-            //UR robot v3.4 returns a 1060 byte packet
+            //UR robot v5.4 returns a 1116 byte packet
             //Grab the last 10 packets and parse the newest one
-            byte[] allBuffer = new byte[(10 * 1060)];
-            int k = stream.Read(allBuffer, 0, (10 * 1060));
-            int startIndex = k - 1060;
-            byte[] bb = new byte[1060];
-            Array.Copy(allBuffer, startIndex, bb, 0, 1060);
+            byte[] allBuffer = new byte[(10 * UNIVERSAL_ROBOT_TCP_STATUS_BUFFER_SIZE)];
+            int k = stream.Read(allBuffer, 0, (10 * UNIVERSAL_ROBOT_TCP_STATUS_BUFFER_SIZE));
+            int startIndex = k - UNIVERSAL_ROBOT_TCP_STATUS_BUFFER_SIZE;
+            byte[] bb = new byte[UNIVERSAL_ROBOT_TCP_STATUS_BUFFER_SIZE];
+            Array.Copy(allBuffer, startIndex, bb, 0, UNIVERSAL_ROBOT_TCP_STATUS_BUFFER_SIZE);
 
             FlipEndian(typeof(UniversalRobotRealTimeTCPStatus), bb);
             GCHandle handle = GCHandle.Alloc(bb, GCHandleType.Pinned);
@@ -381,7 +408,8 @@ namespace NeuralaceMagnetic.Controls
                     command += moveCoOrdinate.qx.ToString() + ", "
                             + moveCoOrdinate.qy.ToString() + ", "
                             + moveCoOrdinate.qz.ToString() + "], ";
-                    command += "t=" + 3 + ")";
+                    command += "a=2.0, v=0.1)";
+                   
                 }
                 else
                 {
@@ -392,7 +420,7 @@ namespace NeuralaceMagnetic.Controls
                     command += URRobotStatus.ToolVectorActual_4.ToString() + ", "
                             + URRobotStatus.ToolVectorActual_5.ToString() + ", "
                             + URRobotStatus.ToolVectorActual_6.ToString() + "]), ";
-                    command += "t=" + moveTime + ", lookahead_time=0.03)"; //move over the time specified
+                    //command += "t=" + moveTime + ", lookahead_time=0.03)"; //move over the time specified
                 }  
                 command += "\n";
 
@@ -498,8 +526,9 @@ namespace NeuralaceMagnetic.Controls
             try
             {
                 Int64 bits = Convert.ToInt64(URRobotStatus.DigitalInputBits);
-                Int64 checkBit = 4;
-                return ((bits & checkBit) == checkBit) || isVirtualEStoppedOverriden;
+                Int64 checkBit = 0;
+                //TODO (9/4/2019): revisit this check when we have estop
+                //return ((bits & checkBit) == checkBit) || isVirtualEStoppedOverriden;
             }
             catch { }
             return false;
@@ -520,9 +549,7 @@ namespace NeuralaceMagnetic.Controls
 
         public bool IsFreeDriveMode()
         {
-            Int64 bits = Convert.ToInt64(URRobotStatus.DigitalInputBits);
-            Int64 checkBit = 1;
-            return ((bits & checkBit) == checkBit);
+            return universalRobotNoPendantController.IsFreeDriveEnabled();
         }
 
         bool freedriveLastState = false;
@@ -546,7 +573,7 @@ namespace NeuralaceMagnetic.Controls
                 StopRobotMove();
                 if (!IsFreeDriveMode())
                 {
-                    SetFreeDriveMode(true);
+                    //SetFreeDriveMode(true);
                 }
                 isVirtualEStopped = true;
             }
@@ -554,7 +581,7 @@ namespace NeuralaceMagnetic.Controls
             {
                 if (isVirtualEStopped)
                 {
-                    SetFreeDriveMode(false);
+                    //SetFreeDriveMode(false);
                     isVirtualEStopped = false;
                 }
             }

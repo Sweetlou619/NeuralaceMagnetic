@@ -22,6 +22,36 @@ namespace NeuralaceMagnetic.Controls
         string lastStatus = "";
 
         bool powerOnRobot = false;
+        bool m_freeDriveEnabled = false;
+        bool freeDriveEnabled
+        {
+            get
+            {
+                return m_freeDriveEnabled;
+            }
+            set
+            {
+                if (m_URTcpClient == null)
+                {
+                    return;
+                }
+
+                if (value)
+                {
+                    Stream universalRobotStream = m_URTcpClient.GetStream();
+                    WriteToSocket("load freedrive_enable.urp\n", ref universalRobotStream);
+                    Thread.Sleep(1000);
+                    WriteToSocket("play\n", ref universalRobotStream);
+                    m_freeDriveEnabled = true;
+                }
+                else
+                {
+                    Stream universalRobotStream = m_URTcpClient.GetStream();
+                    WriteToSocket("stop\n", ref universalRobotStream);
+                    m_freeDriveEnabled = false;
+                }
+            }
+        }
         public bool IsExpectingPowerOff = true;
 
         public enum RobotModePendant
@@ -43,7 +73,7 @@ namespace NeuralaceMagnetic.Controls
 
         public UniversalRobotNoPendantController()
         {
-
+            freeDriveEnabled = false;
         }
 
         public double GetAnalogValue()
@@ -101,6 +131,21 @@ namespace NeuralaceMagnetic.Controls
         public void CloseSafetyPopup()
         {
             commandToWrite = "close safety popup\n";
+        }
+
+        public bool IsFreeDriveEnabled()
+        {
+            return m_freeDriveEnabled;
+        }
+
+        public void TurnOnFreeDrive()
+        {
+            freeDriveEnabled = true;
+        }
+
+        public void TurnOffFreeDrive()
+        {
+            freeDriveEnabled = false;
         }
 
         void GetRobotMode()
@@ -164,9 +209,7 @@ namespace NeuralaceMagnetic.Controls
                 {
                     //write out to tcp
                     Stream stream = m_URTcpClient.GetStream();
-                    Encoding enc = new UnicodeEncoding(true, true, true);
-                    byte[] arrayBytesAnswer = ASCIIEncoding.ASCII.GetBytes(commandToWrite);
-                    stream.Write(arrayBytesAnswer, 0, arrayBytesAnswer.Length);
+                    WriteToSocket(commandToWrite, ref stream);
                     commandToWrite = string.Empty;
                 }
             }

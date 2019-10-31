@@ -16,6 +16,32 @@
 
         </Grid>
         <Grid Grid.Row="1" Background="LightGray">
+            <StackPanel Margin="10,40,650,270">
+                <StackPanel.Resources>
+                    <Style x:Key="TitleLabel" TargetType="Label">
+                        <Setter Property="FontSize" Value="22"/>
+                    </Style>
+                    <Style x:Key="ValueLabel" TargetType="Label">
+                        <Setter Property="FontSize" Value="12"/>
+                    </Style>
+                    <Style TargetType="Separator">
+                        <Setter Property="Height" Value="7"/>
+                        <Setter Property="Opacity" Value="0"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Label Content="Robot Pose:" Style="{StaticResource TitleLabel}"/>
+                <Label Content="{Binding RobotStartLocationString}" Style="{StaticResource ValueLabel}"/>
+                <Separator/>
+                <Label Content="Camera Pose:" Style="{StaticResource TitleLabel}"/>
+                <Label Content="0,0,0,0,0,0" Style="{StaticResource ValueLabel}"/>
+                <Separator/>
+                <Label Content="Delta Robot:" Style="{StaticResource TitleLabel}"/>
+                <Label Content="{Binding DeltaRobotLocationString}" Style="{StaticResource ValueLabel}"/>
+                <Separator/>
+                <Label Content="Delta Marker:" Style="{StaticResource TitleLabel}"/>
+                <Label Content="0,0,0,0,0,0" Style="{StaticResource ValueLabel}"/>
+            </StackPanel>
+            
             <Grid Margin="276,10,271,230" Background="WhiteSmoke" Height="350" Width="350">
                 <Rectangle Fill="Transparent" HorizontalAlignment="Left" Height="350" Stroke="#FF10D5A6" Opacity=".8" StrokeThickness="5" VerticalAlignment="Top" Width="1" Margin="175,0,0,0"/>
                 <Rectangle Fill="Transparent" HorizontalAlignment="Left" Height="1" Stroke="#FF10D5A6" Opacity=".8" StrokeThickness="5" VerticalAlignment="Top" Width="350" Margin="0,175,0,0"/>
@@ -23,11 +49,10 @@
                 <Ellipse Fill="#FF10D5A6" Height="20" Stroke="#FF10D5A6" VerticalAlignment="Top" HorizontalAlignment="Left" Width="20" Margin="165,165,0,0"/>
 
             </Grid>
-            <Label Content="Acceleration (ms): " FontSize="22" Height="40" Width="200" Margin="10,252,687,358"/>
-            <TextBox Height="40" Text="{Binding AccelerationSpeed, Mode=TwoWay}" FontSize="22" Margin="10,297,821,313"/>
+            <Label Content="Acceleration (ms): " FontSize="22" Height="40" Width="200" Margin="10,384,689.2,227.2"/>
+            <TextBox Height="40" Text="{Binding AccelerationSpeed, Mode=TwoWay}" FontSize="22" Margin="11,429,819.2,182.2"/>
             <Button x:Name="DoneButton" Margin="158,0,162,10" Height="92" VerticalAlignment="Bottom" Background="White" Content="Complete" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="18" Click="DoneButton_Click"/>
-            <Label x:Name="errorLabel" Foreground="Tomato" Content="" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="70" Margin="10,0,10,107" VerticalAlignment="Bottom" FontSize="22" Width="877"/>
-            <Label x:Name="statusLabel" Foreground="White" Content="" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="70" Margin="10,0,10,177" VerticalAlignment="Bottom" FontSize="22" Width="877"/>
+            <Label x:Name="statusLabel" Foreground="White" Content="" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Height="70" Margin="10,0,10,107" VerticalAlignment="Bottom" FontSize="22" Width="877"/>
         </Grid>
     </Grid>
 </Window>

@@ -170,5 +170,15 @@ namespace NeuralaceMagnetic.Controls
 
         public double DigitalOuputs;
         public double ProgramState;
+
+        public double ElbowPosition_1;
+        public double ElbowPosition_2;
+        public double ElbowPosition_3;
+
+        public double ElbowVelocity_1;
+        public double ElbowVelocity_2;
+        public double ElbowVelocity_3;
+
+        public double SafetyStatus;
     }
 }

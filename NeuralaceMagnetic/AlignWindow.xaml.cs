@@ -22,7 +22,7 @@ namespace NeuralaceMagnetic
         public AlignWindow()
         {
             InitializeComponent();
-            App.Current.URController.SetVirtualEStopOverride(true);
+            App.Current.URNoPendantControl.TurnOnFreeDrive();
         }
 
         private void DoneButton_Click(object sender, RoutedEventArgs e)
@@ -33,8 +33,7 @@ namespace NeuralaceMagnetic
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
-            App.Current.URController.SetVirtualEStopOverride(false);
+            App.Current.URNoPendantControl.TurnOffFreeDrive();
         }
     }
 }

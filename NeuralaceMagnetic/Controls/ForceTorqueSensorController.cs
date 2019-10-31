@@ -23,7 +23,8 @@ namespace NeuralaceMagnetic.Controls
             public double ZTorque;
         }
 
-        public bool IsSensorConnected = false;
+        //No more external force torque sensor, always true
+        public bool IsSensorConnected = true;
         private TcpClient m_TcpClient;
         ForceReadout lastForceRead;
         DateTime lastForceReadTime = DateTime.MinValue;

@@ -91,9 +91,8 @@ namespace NeuralaceMagnetic
             PatientMarker2Visible.Fill = App.Current.PolarisController.GetUserRigidBodyTwo().isInRange ? App.Current.ThemeColor : Brushes.Gray;
 
             //force sensor
-            ForceConnected.Fill = App.Current.ForceTorqueSensor.IsSensorConnected ? App.Current.ThemeColor : Brushes.Gray;
             ForceOverLimit.Fill = UniversalRobotHelperFunctions.IsForceOverLimit() ? Brushes.Tomato : Brushes.Gray;
-            TrackButton.IsEnabled = App.Current.MachineHomed;
+            TrackButton.IsEnabled = true; //App.Current.MachineHomed;
         }
 
         private void UiTimer_Tick(object sender, EventArgs e)
@@ -192,7 +191,8 @@ namespace NeuralaceMagnetic
 
         private void CalibrateButton_Click(object sender, RoutedEventArgs e)
         {
-            if (VerifyEStop())
+            //TODO (9/4/2019): revisit this check when we have estop
+            //if (VerifyEStop())
             {
                 CalibrateWindow window = new CalibrateWindow();
                 window.Owner = this;
@@ -202,7 +202,8 @@ namespace NeuralaceMagnetic
 
         private void TrackButton_Click(object sender, RoutedEventArgs e)
         {
-            if (VerifyEStop())
+            //TODO (9/4/2019): revisit this check when we have estop
+            //if (VerifyEStop())
             {
                 TrackWindow window = new TrackWindow();
                 window.Owner = this;
@@ -243,7 +244,8 @@ namespace NeuralaceMagnetic
 
         private void CalibrateButton_V2_Click(object sender, RoutedEventArgs e)
         {
-            if (VerifyEStop())
+            //TODO (9/4/2019): revisit this check when we have estop
+            //if (VerifyEStop())
             {
                 CalibrationManualWindow window = new CalibrationManualWindow();
                 window.Owner = this;

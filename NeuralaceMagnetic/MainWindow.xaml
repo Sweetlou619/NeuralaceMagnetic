@@ -46,7 +46,7 @@
             </Grid>
         </GroupBox>
 
-        <GroupBox Header="Polaris Camera" FontSize="18" Margin="0,526,9,0" Grid.Row="1" HorizontalAlignment="Right" Width="444" Height="231" VerticalAlignment="Top" >
+        <GroupBox Header="Polaris Camera" FontSize="18" Margin="0,480,9,0" Grid.Row="1" HorizontalAlignment="Right" Width="444" Height="231" VerticalAlignment="Top" >
             <Grid>
                 <Rectangle Fill="White" Opacity="0.6"></Rectangle>
                 <Ellipse x:Name="PolarisConnected" Height="40" Width="40" Fill="Gray" Margin="10,10,382,0" VerticalAlignment="Top"></Ellipse>
@@ -118,16 +118,12 @@
         <Button x:Name="CalibrateButton" Style="{DynamicResource RoundCorner}"  Margin="39,260,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Calibrate" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="CalibrateButton_Click" />
         <Button x:Name="TrackButton" IsEnabled="False" Style="{DynamicResource RoundCorner}"  Margin="39,360,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Track" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="TrackButton_Click" />
         <Button x:Name="SettingsButton" Style="{DynamicResource RoundCornerWhiteSmokeBackground}"  Margin="0,0,10,10" Height="50" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="250" Background="WhiteSmoke" Content="Settings" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="SettingsButton_Click" />
-        <Button x:Name="SettingsOn" Style="{DynamicResource RoundCorner}"  Margin="0,762,10,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Right" Width="134" Background="WhiteSmoke" Content="On/Off" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="Button_Click_1" />
-        <GroupBox Header="Force Sensor" FontSize="18" Margin="0,371,10,0" Grid.Row="1" HorizontalAlignment="Right" Width="444" Height="150" VerticalAlignment="Top" >
+        <Button x:Name="SettingsOn" Style="{DynamicResource RoundCorner}"  Margin="0,715.8,-12.4,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Right" Width="134" Background="WhiteSmoke" Content="On/Off" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="Button_Click_1" />
+        <GroupBox Header="Force Sensor" FontSize="18" Margin="0,371,10,0" Grid.Row="1" HorizontalAlignment="Right" Width="444" Height="100" VerticalAlignment="Top" >
             <Grid>
                 <Rectangle Fill="White" Opacity="0.6"/>
-                <Ellipse x:Name="ForceConnected" Height="40" Width="40" Fill="Gray" Margin="10,10,382,0" VerticalAlignment="Top"/>
-                <Label Width="150" FontSize="20" Content="Connected" Margin="55,11,227,0" Height="41" VerticalAlignment="Top"/>
-                <Ellipse x:Name="ForceOverLimit" Height="40" Width="40" Fill="Gray" Margin="10,56,382,0" VerticalAlignment="Top"/>
-                <Label FontSize="20" Content="Force Over Limit" Margin="55,57,117,0" Height="41" VerticalAlignment="Top"/>
-                <Button x:Name="TareForce" Style="{DynamicResource RoundCorner}"  Margin="0,57,17,0" Height="40" VerticalAlignment="Top" HorizontalAlignment="Right" Width="100" Background="WhiteSmoke" Content="Tare" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" FontWeight="Bold" FontSize="20" Click="TareForce_Click" />
-
+                <Ellipse x:Name="ForceOverLimit" Height="40" Width="40" Fill="Gray" Margin="10,15,382,0" VerticalAlignment="Top"/>
+                <Label FontSize="20" Content="Force Over Limit" Margin="55,15,117,0" Height="41" VerticalAlignment="Top"/>
             </Grid>
         </GroupBox>
         <Button x:Name="CalibrateButton_V2" Style="{DynamicResource RoundCorner}"  Margin="294,260,0,0" Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="250" Background="White" Content="Manual" BorderBrush="#FF10D5A6" BorderThickness="2" Foreground="#FF10D5A6" Grid.Row="1" FontWeight="Bold" FontSize="25" Click="CalibrateButton_V2_Click" />
