@@ -25,6 +25,24 @@ namespace NeuralaceMagnetic.Controls
             public double qx;
             public double qy;
             public double qz;
+
+            public override String ToString()
+            {
+                return String.Format("{0:N2}, {1:N2}, {2:N2}, {3:N2}, {4:N2}, {5:N2}", x, y, z, qx, qy, qz);
+            }
+
+            public static URRobotCoOrdinate operator -(URRobotCoOrdinate r1, URRobotCoOrdinate r2)
+            {
+                URRobotCoOrdinate newVal = new URRobotCoOrdinate();
+                newVal.x = r1.x - r2.x;
+                newVal.y = r1.y - r2.y;
+                newVal.z = r1.z - r2.z;
+                newVal.qx = r1.qx - r2.qx;
+                newVal.qy = r1.qy - r2.qy;
+                newVal.qz = r1.qz - r2.qz;
+
+                return newVal;
+            }
         }
 
         private bool hasReachedPosition = true;
