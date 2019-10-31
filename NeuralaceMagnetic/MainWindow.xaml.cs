@@ -92,7 +92,7 @@ namespace NeuralaceMagnetic
 
             //force sensor
             ForceOverLimit.Fill = UniversalRobotHelperFunctions.IsForceOverLimit() ? Brushes.Tomato : Brushes.Gray;
-            TrackButton.IsEnabled = true; //App.Current.MachineHomed;
+            TrackButton.IsEnabled = App.Current.MachineHomed;
         }
 
         private void UiTimer_Tick(object sender, EventArgs e)
@@ -152,10 +152,12 @@ namespace NeuralaceMagnetic
                 Vector3D rpyFromQ = App.Current.CoordinateTranslator.QuaternionToRPY(rBody.qx,
                     rBody.qy, rBody.qz, rBody.qo);
 
-                PolarisQX.Text = radtoang(rpyFromQ.X).ToString();
-                PolarisQY.Text = radtoang(rpyFromQ.Y).ToString();
-                PolarisQZ.Text = radtoang(rpyFromQ.Z).ToString();
-
+               // PolarisQX.Text = radtoang(rpyFromQ.X).ToString();
+                //PolarisQY.Text = radtoang(rpyFromQ.Y).ToString();
+                //PolarisQZ.Text = radtoang(rpyFromQ.Z).ToString();
+                PolarisQX.Text = (rpyFromQ.X).ToString();
+                PolarisQY.Text = (rpyFromQ.Y).ToString();
+                PolarisQZ.Text = (rpyFromQ.Z).ToString();
                 AnalogRead.Text = UniversalRobotHelperFunctions.ConvertAnalogReaderToMM(App.Current.URSecondController.GetAnalogValue()).ToString();
 
                 safetyStatus.Text = App.Current.URSecondController.GetCurrentSafetyStatus().ToString();

@@ -178,9 +178,9 @@ namespace NeuralaceMagnetic.Controls
             converted.zDelta = (polaris.x / 1000);// ((-polaris.xDelta) / 1000);
 
             RPY_RigidBodyDeltas rpy_converted = new RPY_RigidBodyDeltas();
-            rpy_converted.rDelta = (polaris.qz / 1000);
-            rpy_converted.pDelta = (polaris.qy / 1000);
-            rpy_converted.yDelta = (polaris.qz / 1000);
+            rpy_converted.rDelta = (polaris.qz);
+            rpy_converted.pDelta = (polaris.qy);
+            rpy_converted.yDelta = (polaris.qx);
 
             UniversalRobotController.URRobotCoOrdinate convertedDelta = new UniversalRobotController.URRobotCoOrdinate();
 
