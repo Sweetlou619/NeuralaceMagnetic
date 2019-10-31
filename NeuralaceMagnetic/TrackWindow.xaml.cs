@@ -17,6 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
+
 namespace NeuralaceMagnetic
 {
     /// <summary>
@@ -24,10 +25,11 @@ namespace NeuralaceMagnetic
     /// </summary>
     public partial class TrackWindow : Window, INotifyPropertyChanged
     {
-        double centerPixelOffset = 155;
+        private double centerPixelOffset = 155;
         private DispatcherTimer uiTimer;
         private Thread backgroundThread;
-        Controls.TrackCameraWithRobot robotTrack;
+        private Controls.TrackCameraWithRobot robotTrack;
+        private Controls.UniversalRobotController.URRobotCoOrdinate robotStartLocation;
 
         private double _AccelerationSpeed = 200;
         public double AccelerationSpeed
@@ -40,6 +42,36 @@ namespace NeuralaceMagnetic
             {
                 _AccelerationSpeed = value;
                 robotTrack.AccelerationSpeed = _AccelerationSpeed;
+                OnPropertyChanged();
+            }
+        }
+
+        private String _RobotStartLocationString;
+        public String RobotStartLocationString
+        {
+            get
+            {
+                return _RobotStartLocationString;
+            }
+
+            set
+            {
+                _RobotStartLocationString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private String _DeltaRobotLocationString;
+        public String DeltaRobotLocationString
+        {
+            get
+            {
+                return _DeltaRobotLocationString;
+            }
+
+            set
+            {
+                _DeltaRobotLocationString = value;
                 OnPropertyChanged();
             }
         }
@@ -58,6 +90,11 @@ namespace NeuralaceMagnetic
             App.Current.TorqueSensorTracking,
             _AccelerationSpeed
             );
+
+            robotStartLocation = App.Current.URController.GetCurrentLocation();
+            RobotStartLocationString = robotStartLocation.ToString();
+
+            //TODO: Get position of marker
         }
 
         void CreateUIUpdateThread()
@@ -72,7 +109,7 @@ namespace NeuralaceMagnetic
         {
             this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
             {
-                NeuralaceMagnetic.Controls.UniversalRobotController.URRobotCoOrdinate current = App.Current.URController.GetCurrentLocation();
+                Controls.UniversalRobotController.URRobotCoOrdinate current = App.Current.URController.GetCurrentLocation();
                 double xOffset = robotTrack.CurrentSetPoint.x - current.x;
                 double yOffset = robotTrack.CurrentSetPoint.y - current.y;
                 xOffset = Math.Round(xOffset, 4);
@@ -84,6 +121,9 @@ namespace NeuralaceMagnetic
                     centerPixelOffset + xOffset,
                     centerPixelOffset + yOffset,
                     0, 0);
+
+                Controls.UniversalRobotController.URRobotCoOrdinate deltaRobot = robotStartLocation - current;
+                DeltaRobotLocationString = deltaRobot.ToString();
             }));
         }
 
@@ -97,23 +137,24 @@ namespace NeuralaceMagnetic
         void robotTrack_InitOccured(object sender, EventArgs e)
         {
             this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                    {
-                        if (App.Current.ApplicationSettings.TrackTOFSensor)
-                        {
-                            statusLabel.Content = "Current ToF tracking distance: " + robotTrack.GetLaserSetPoint() + " mm";
-                        }
-                        else
-                        {
-                            statusLabel.Content = "ToF tracking is disabled.";
-                        }
-                    }));
+            {
+                if (App.Current.ApplicationSettings.TrackTOFSensor)
+                {
+                    statusLabel.Content = "Current ToF tracking distance: " + robotTrack.GetLaserSetPoint() + " mm";
+                }
+                else
+                {
+                    statusLabel.Content = "ToF tracking is disabled.";
+                }
+            }));
         }
 
         private void RobotTrack_ErrorOccured(object sender, EventArgs e)
         {
             this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
             {
-                errorLabel.Content = robotTrack.LastErrorMessage;
+                statusLabel.Content = robotTrack.LastErrorMessage;
+                statusLabel.Foreground = Brushes.Tomato;
                 MessageBox.Show(robotTrack.LastErrorMessage, "An Error has occured!",
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 this.DoneButton.Focus();
@@ -141,7 +182,7 @@ namespace NeuralaceMagnetic
             {
                 backgroundThread.Abort();
             }
-            
+
             App.Current.TorqueSensorTracking.SetForceTracking(false);
             App.Current.URController.DisableTrackingMotionSettings();
             App.Current.URController.SetVirtualEStopOverride(false);
@@ -150,29 +191,29 @@ namespace NeuralaceMagnetic
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             backgroundThread = new Thread(() =>
+            {
+                Thread.CurrentThread.IsBackground = true;
+
+                for (int i = 3; i > 0; i--)
                 {
-                    Thread.CurrentThread.IsBackground = true;
-
-                    for (int i = 3; i > 0; i--)
-                    {
-                        this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
-                        {
-                            statusLabel.Content = "Tracking starting in: " + i.ToString();
-                        }));
-                        SystemSounds.Beep.Play();
-                        Thread.Sleep(1000);
-                    }
-
-                    SystemSounds.Exclamation.Play();
-
                     this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
                     {
-                        App.Current.URController.UseTrackingMotionSettings();
-                        CreateUIUpdateThread();
-                        DoTracking();
+                        statusLabel.Content = "Tracking starting in: " + i.ToString();
                     }));
-                });
-            
+                    SystemSounds.Beep.Play();
+                    Thread.Sleep(1000);
+                }
+
+                SystemSounds.Exclamation.Play();
+
+                this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+                {
+                    App.Current.URController.UseTrackingMotionSettings();
+                    CreateUIUpdateThread();
+                    DoTracking();
+                }));
+            });
+
             backgroundThread.Start();
         }
 
