@@ -263,6 +263,7 @@ namespace NeuralaceMagnetic.Controls
             return new Vector3D();
         }
 
+        
         public Vector3D QuaternionToRPY(double x, double y, double z, double w)
         {
             double heading = Math.Atan2(2 * y * w - 2 * x * z, 1 - 2 * Math.Pow(y, 2) - 2 * Math.Pow(z, 2));
@@ -281,6 +282,37 @@ namespace NeuralaceMagnetic.Controls
             }
             Vector3D returnVector = new Vector3D(heading, attitude, bank);
             return returnVector;
-        }
+        } 
+
+            /*
+        public Vector3D QuaternionToRPY(double x, double y, double z, double w)
+        {
+
+            // roll (x-axis rotation)
+            double roll = 0;
+            double sinr_cosp = +2.0 * (w * x + y * z);
+            double cosr_cosp = +1.0 - 2.0 * (x * x + y * y);
+            roll = Math.Atan2(sinr_cosp, cosr_cosp);
+            //roll = DegreeToRadian(roll);
+           
+            // pitch (y-axis rotation)
+            double pitch = 0;
+            double sinp = +2.0 * (w * y - z * x);
+            if (Math.Abs(sinp) >= 1)
+                pitch = Math.Sign(sinp)*(Math.PI / 2); // use 90 degrees if out of range
+            else
+                pitch = Math.Asin(sinp);
+
+            // yaw (z-axis rotation)
+            double yaw = 0;
+            double siny_cosp = +2.0 * (w * z + x * y);
+            double cosy_cosp = +1.0 - 2.0 * (y * y + z * z);
+            yaw = Math.Atan2(siny_cosp, cosy_cosp);
+
+
+            Vector3D returnVector = new Vector3D(roll,pitch,yaw);
+            return returnVector;
+        }*/
+
     }
 }

@@ -25,24 +25,6 @@ namespace NeuralaceMagnetic.Controls
             public double qx;
             public double qy;
             public double qz;
-
-            public override String ToString()
-            {
-                return String.Format("{0:N2}, {1:N2}, {2:N2}, {3:N2}, {4:N2}, {5:N2}", x, y, z, qx, qy, qz);
-            }
-
-            public static URRobotCoOrdinate operator - (URRobotCoOrdinate r1, URRobotCoOrdinate r2)
-            {
-                URRobotCoOrdinate newVal = new URRobotCoOrdinate();
-                newVal.x = r1.x - r2.x;
-                newVal.y = r1.y - r2.y;
-                newVal.z = r1.z - r2.z;
-                newVal.qx = r1.qx - r2.qx;
-                newVal.qy = r1.qy - r2.qy;
-                newVal.qz = r1.qz - r2.qz;
-
-                return newVal;
-            }
         }
 
         private bool hasReachedPosition = true;
@@ -259,7 +241,7 @@ namespace NeuralaceMagnetic.Controls
             if (isVirtualEStopMoveRunning)
                 return;
 
-            shouldUseAnglesInMove = false;//manualOverrideAngles;
+            shouldUseAnglesInMove = true;//manualOverrideAngles;
             moveCoOrdinate.setTime = DateTime.Now;
             moveCoOrdinate.x = x;
             moveCoOrdinate.y = y;
@@ -401,15 +383,16 @@ namespace NeuralaceMagnetic.Controls
                 string command = "";
                 if (shouldUseAnglesInMove)
                 {
-                    command = "movej(p["
+                    command = "servoj(get_inverse_kin(p["
                     + moveCoOrdinate.x.ToString() + ", "
                     + moveCoOrdinate.y.ToString() + ", "
                     + moveCoOrdinate.z.ToString() + ", ";
                     command += moveCoOrdinate.qx.ToString() + ", "
                             + moveCoOrdinate.qy.ToString() + ", "
-                            + moveCoOrdinate.qz.ToString() + "], ";
-                    command += "a=2.0, v=0.1)";
-                   
+                            + moveCoOrdinate.qz.ToString() + "]), ";
+                   // command += "a=2.0, v=0.1)";
+                    command += "t=" + moveTime + ", lookahead_time=0.03)";
+
                 }
                 else
                 {
@@ -420,7 +403,7 @@ namespace NeuralaceMagnetic.Controls
                     command += URRobotStatus.ToolVectorActual_4.ToString() + ", "
                             + URRobotStatus.ToolVectorActual_5.ToString() + ", "
                             + URRobotStatus.ToolVectorActual_6.ToString() + "]), ";
-                    //command += "t=" + moveTime + ", lookahead_time=0.03)"; //move over the time specified
+                    command += "t=" + moveTime + ", lookahead_time=0.03)"; //move over the time specified
                 }  
                 command += "\n";
 
